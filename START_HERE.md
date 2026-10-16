@@ -1,30 +1,23 @@
-# Guess The Predator 2 — Pinkshift Reloaded
+# Deploy — GTP2 V2.2 Neon Phantom
 
-**PUBLICATION CAUTION:** Read `RIGHTS_AND_GITHUB_AUDIT.md` first. The site's game-specific content has not been fully cleared. EA's published content policy restricts fan games, so this package is intended for local review/development until permissions or appropriate legal review are completed.
+**Before a public release:** See `RIGHTS_AND_GITHUB_AUDIT.md`. Working code, homebrew art, and an unofficial disclaimer do not guarantee permission from EA; existing character, icon and fan-game restrictions remain.
 
-## Preview / local development
+1. Create or open a **new repository**, e.g. `guess-the-predator-2`, in GitHub Desktop.
+2. Extract this FULL ZIP. **Copy all its contents** (`index.html`, `styles.css`, `pinkshift.css`, `.github/`, `src/`, `assets/`, etc.) straight into your repository root. No additional `GTP2_PINKSHIFT_20_BUILD/` folder.
+3. Preserve the repository `.git` directory; do not copy a `.git` folder from elsewhere.
+4. Commit and `Push origin` to the `main` branch.
+5. GitHub → repository Settings → Pages → Build and deployment → Source **GitHub Actions**.
+6. Wait for the Pages workflow to finish successfully, then refresh the published site with Ctrl+F5.
+7. Test: Home (one borderless Mirage scene), all 6 modes, Map artwork, Browse Legends, Quote text-only, Sound ON + TEST, and `MEDIA_DIAGNOSTIC.html`.
 
-No npm required. From the project root, run `python -m http.server 8000`, then open `http://localhost:8000/` in your browser. Opening index.html via `file://` may block ES Modules.
+## What is included and what is not
 
-## If authorized to publish on GitHub Pages
+- 72 *stylized illustrations* of 36 sectors: **not** screenshots. Your approved images can replace them using Media Studio.
+- 28 original local transparent *illustrative figurines*: **not** the actual 3D character models.
+- 20 original interface WAVs (no official sound recordings).
+- Original HTML/CSS/JS plus automated QA.
+- No authenticated Apex voice tracks or genuine real-game location captures.
 
-1. Create a brand-new repository (e.g. `guess-the-predator-2`).
-2. Extract the ZIP. Copy **all contents of the ZIP** directly to repository root (`index.html`, `pinkshift.css`, `styles.css`, `src`, `assets`, `.github`). Do not wrap them inside an extra folder.
-3. Commit and Push via GitHub Desktop to the main branch.
-4. GitHub → Settings → Pages → Build and deployment → Source: **GitHub Actions**. Wait for workflow to turn green.
-5. Clear cache or press Ctrl+F5 if the old theme still appears.
+To replace figures later with permitted images, add transparent `assets/legends/<slug>.webp` (or PNG where supported). Images should show one full-body character on transparent background; the roster card size and alignment are consistent.
 
-## Media Studio workflow
-
-- Open `MEDIA_STUDIO.html` on the site. Each map/POI accepts **up to eight** distinct local images. Imports are not uploaded automatically.
-- Use only media with public distribution permission. Confirm rights checkbox; export media pack ZIP; extract it over repo root and push.
-- Install genuine permitted character recordings through Studio if available. They will work with the existing playback control; synthetic impersonations are not included.
-- `MEDIA_DIAGNOSTIC.html` shows actual files found by the browser.
-
-## Status
-
-- 36 configured Map sectors, including interiors; **0 actual licensed Map screenshots** supplied.
-- 8 local Ability crops; 20 need authorized artwork.
-- **14 original UI audio clips installed and playable** after user interaction.
-- 0 character voices bundled (human recordings require appropriate permission).
-- Remote portrait hotlinks currently remain an unresolved rights/reliability concern.
+The site does not require npm, React or an API backend. Save progress remains in the GTP2 browser localStorage key.

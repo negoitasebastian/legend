@@ -21,10 +21,15 @@ assert './MEDIA_STUDIO.html' in js
 assert 'gtp2-audio-preview' in js
 assert 'mapMediaManifest' in (root/'src/maps.mjs').read_text()
 assert 'https://' not in (root/'src/maps.mjs').read_text()
-assert len(list((root/'assets/sfx').glob('*.wav')))==14
+assert (root/'src/concept_map_manifest.mjs').is_file()
+assert len(list((root/'assets/maps').glob('*-concept-*.webp')))==72
+assert len(list((root/'assets/legends').glob('*.webp')))==28
+for f in list((root/'assets/maps').glob('*-concept-*.webp'))+list((root/'assets/legends').glob('*.webp')):
+    im=Image.open(f);im.verify()
+assert len(list((root/'assets/sfx').glob('*.wav')))==20
 assert (root/'src/engine.mjs').read_text().count('%36')>=1
 for f in (root/'assets/ability-icons').glob('*.png'):
     assert f.read_bytes()[:8]==b'\x89PNG\r\n\x1a\n', f
 maps=sum(any((root/'assets/maps'/f"{r['id']}.{ext}").exists() for ext in ['webp','jpg','png','jpeg']) for r in locations)
-print(f'GTP2 QA PASS: 36 POI entries / 6 maps / {maps} bundled real photos / 8 local Ability icons / 14 original WAV SFX / one borderless hero')
+print(f'GTP2 QA PASS: 36 POI entries / 6 maps / 72 concept illustrations / 28 local role-themed avatar cutouts / {maps} bundled actual screenshots / 8 local Ability icons / 20 original WAV SFX / one borderless hero')
 if not maps: print('NOTE: No verified location screenshots bundled. Import authorized captures via Media Studio.')

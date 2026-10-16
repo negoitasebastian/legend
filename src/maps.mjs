@@ -1,4 +1,5 @@
 import {mapMediaManifest} from './map_media_manifest.mjs';
+import {conceptMapManifest} from './concept_map_manifest.mjs';
 /** Actual POI screenshots are referenced by their documented Wiki filenames.
  * Real game assets are NOT manufactured or silently replaced by generic art.
  * Local files under assets/maps are always preferred when present.
@@ -317,12 +318,16 @@ export function mapShots(entry,angle=0){
  if(!entry)return [];
  const manifest=(mapMediaManifest[entry.id]||[]).filter(safeLocalName)
    .map(filename=>`./assets/maps/${filename}`);
+ const concept=(conceptMapManifest[entry.id]||[]).filter(safeLocalName)
+   .map(filename=>`./assets/maps/${filename}`);
+ const local=['webp','png','jpg','jpeg'].map(ext=>mapLocalPath(entry,ext));
+ // User-approved captures always override the original concept artwork.
  if(manifest.length){
    const start=((Math.trunc(Number(angle)||0)%manifest.length)+manifest.length)%manifest.length;
-   return [...manifest.slice(start),...manifest.slice(0,start)];
+   return [...manifest.slice(start),...manifest.slice(0,start),...concept];
  }
- // Backward-compatible single-image installation without a manifest.
- return ['webp','png','jpg','jpeg'].map(ext=>mapLocalPath(entry,ext));
+ const start=((Math.trunc(Number(angle)||0)%concept.length)+concept.length)%concept.length;
+ return [...local,...concept.slice(start),...concept.slice(0,start)];
 }
 export function mapRound(entry){return {answer:entry.id,stage:1,mapGuesses:[],poiGuesses:[],won:false,finished:false,loss:null,startedAt:null,finishedAt:null,mediaAngle:Math.floor(Math.random()*100000)};}
 export function mapGuess(round,value,entry,now=Date.now()){

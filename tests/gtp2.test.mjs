@@ -48,7 +48,7 @@ test('eight legitimate ability icons only',()=>{
  for(const slug of localAbilitySlugs){assert.ok(abilityCandidates(slug).length);assert.ok(existsSync(resolve(root,`assets/ability-icons/${slug}.png`)))}
 });
 test('voice and media studio present, no fake installed voices',()=>{
- assert.ok(js.includes('TEXT INTERCEPT'));assert.ok(js.includes('MEDIA_STUDIO.html'));
+ assert.ok(js.includes('TEXT ONLY'));assert.ok(js.includes('MEDIA_STUDIO.html'));
  assert.ok(!js.includes('HUMAN VOICE FILE NOT INSTALLED'));
  assert.ok(existsSync(resolve(root,'MEDIA_STUDIO.html')));
 });

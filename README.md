@@ -1,30 +1,30 @@
-# Guess The Predator 2 — Pinkshift Reloaded 2.1
+# Guess the Predator 2 — Neon Phantom / Pinkshift 2.0
 
-Independent prototype of an Apex-inspired interactive fan trivia website, written as static HTML, CSS and JS modules. No npm/build dependencies. **Not endorsed by or affiliated with EA or its licensors.**
+A static, independent Apex-inspired trivia prototype. Written in plain HTML/CSS/JavaScript for GitHub Pages. **Not endorsed or affiliated with EA / Respawn. Not certified for public publishing.**
 
-**Review `RIGHTS_AND_GITHUB_AUDIT.md` before any public GitHub deployment.** EA's public content policy does not permit fan games/spin-offs, and some earlier visual assets/hotlinks are not cleared for redistribution. Working code does not establish permission.
+## Game features
 
-### Included features
+Six modes: Classic, Pixel, Quote (text only), Ability, Emoji and Map. Daily & Free Play, One Signal / Full Scan, optional Rush 180s, streaks and local save progress, Wheel, Legend of the Day and Forbidden Tip/Chest.
 
-- Borderless full-screen one-image homepage; vivid magenta/cyan Pinkshift design.
-- Six challenge modes: Classic, Pixel, Quote, Ability, Emoji, Map. Daily and Unlimited; 6 guesses One Signal, 5 Full Scan, optional Rush 180 seconds.
-- 36 configured POIs on 6 maps, including interiors; multiple independently imported captures per POI.
-- Wheel, Legend of the Day, Forbidden Tip/Chest, streaks and local browser storage.
-- **14 original local WAV UI sounds**: 6 hover sounds and 8 functional navigation/outcome effects. No third-party audio samples or character impersonations included.
-- Media Studio for permitted map screenshots, Ability icons and human-recorded voice clips; Media Diagnostic for live asset health checks.
+### Actual bundled media
 
-### Current media availability
+| Asset | Quantity | Reality |
+|---|---:|---|
+| Map sectors | 36 | 6 arenas, including 13 interiors |
+| Map imagery | **72** | Original 2D illustrated concept scenes (two perspectives per sector), **not genuine Apex screenshots** |
+| Local Legend figures | **28** | Transparent original stylized 2.5D sci-fi figurines; not game models or accurate Legend likenesses |
+| Original UI sound effects | **20 WAV** | 6 hover, 6 entering modes, 8 interface / feedback effects |
+| Game ability icons | **8** | Earlier screenshots; **rights not independently verified** |
+| Authorized character voice clips | **0** | Quote is text-only by design |
 
-| Category | Available |
-|---|---|
-| Map locations configured | 36 |
-| Actual permitted location screenshots bundled | **0** |
-| Genuine Ability crops in legacy project | 8 |
-| Actual licensed character voice recordings | **0** |
-| Original authored WAV effects | **14** |
-| Remote Legend portraits | Links only, rights/reliability not verified |
+No third-party map image hotlinks. Map imports from `MEDIA_STUDIO.html` override built-in concept paintings, and if they are unavailable, the painted fallback continues working. `MEDIA_DIAGNOSTIC.html` distinguishes source photos from original paintings.
 
-Local preview: `python -m http.server 8000` then `http://localhost:8000/`.
-Node smoke test: `node --test tests/*.test.mjs`; package check: `python3 scripts/validate_release.py`.
+## Play and test
 
-More details: `START_HERE.md`, `RELEASE_NOTES.md`, `RIGHTS_AND_GITHUB_AUDIT.md`.
+- GitHub Pages: upload the ZIP **contents directly to repository root**; do not create an extra nested project folder.
+- Local preview: `python -m http.server 8000` from this root, then `http://localhost:8000/`.
+- Node tests: `node --test tests/*.test.mjs`.
+- Release validation: `python3 scripts/validate_release.py` (Pillow required).
+- Optional Chromium tests: `python3 tests/make_browser_harness.py` then `python3 tests/browser_qa.py`, `python3 tests/v22_visual_qa.py`, and `python3 tests/v22_audio_qa.py` (playwright/Chromium).
+
+Read `START_HERE.md`, `RELEASE_NOTES.md` and especially `RIGHTS_AND_GITHUB_AUDIT.md` before publishing any Apex-related game.
