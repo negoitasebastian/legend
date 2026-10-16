@@ -109,7 +109,7 @@ function portrait(slug,{alt='',cls='',concealed=false,eager=false}={}) {
 function loadPortraitImages(parent=app){
   parent.querySelectorAll('img[data-portrait]:not([data-art-ready])').forEach(image=>{
     image.dataset.artReady='yes';
-    const candidates=[`./assets/legends/${image.dataset.portrait}.webp`,`./assets/legends/${image.dataset.portrait}.png`,...(artCatalog[image.dataset.portrait]||[])];let index=0;
+    const candidates=artCatalog[image.dataset.portrait]||[];let index=0;
     const next=()=>{
       if(index>=candidates.length){
         const box=image.closest('.portrait-holder');
@@ -232,7 +232,7 @@ window.addEventListener('pointermove',event=>{lastPointer=event;
 },{passive:true});
 window.addEventListener('resize',()=>{if(document.getElementById('mirage-gaze'))drawGaze()},{passive:true});
 function nav(){return `<header class="top gtp2-top"><div class="gtp2-top-inner">
-  <button class="brand gtp2-brand" data-action="home" aria-label="Guess the Predator 2 home"><span class="brand-icon" aria-hidden="true"><span class="brand-apex">G</span></span><span class="brand-text"><strong>GUESS THE <em>PREDATOR</em> <sup>2</sup></strong><small>NEON PHANTOM · ORIGINAL ART EDITION</small></span></button>
+  <button class="brand gtp2-brand" data-action="home" aria-label="Guess the Predator 2 home"><span class="brand-icon" aria-hidden="true"><span class="brand-apex">G</span></span><span class="brand-text"><strong>GUESS THE <em>PREDATOR</em> <sup>2</sup></strong><small>PINKSHIFT · PORTRAITS RESTORED</small></span></button>
   <nav class="topnav" aria-label="Main navigation"><button class="nav-item ${screen==='home'?'active':''}" data-action="home">⌂ HOME</button><button class="nav-item ${screen==='game'?'active':''}" data-action="open" data-mode="classic">◈ PLAY</button><button class="nav-item ${screen==='records'?'active':''}" data-action="records">▤ STATS</button><a class="nav-item" href="./MEDIA_STUDIO.html">◫ MEDIA STUDIO</a></nav>
   <div class="top-actions"><button class="switch gtp2-sound-switch" data-action="audio" aria-label="Toggle original sound effects" aria-pressed="${store.settings.audio}">${store.settings.audio?'♫ SOUND ON':'♪ SOUND OFF'}</button><button class="gtp2-audio-preview" data-action="sound-test" title="Preview original UI sound">▶ TEST</button></div>
  </div></header>`;}
@@ -394,10 +394,10 @@ function mapGame(){
  const used=new Set(attempted);
  const options=choices.map(choice=>`<button class="map-choice ${used.has(choice)?'eliminated':''}" data-action="map-guess" data-name="${esc(choice)}" ${round.finished||used.has(choice)?'disabled':''}>${esc(choice)}${used.has(choice)?' ×':''}</button>`).join('');
  const state=round.finished?(round.won?'✓ SECTOR CONFIRMED':'✕ SIGNAL LOST'):`STAGE ${stage} / 2 · ${stage===1?'IDENTIFY MAP':'IDENTIFY POI'}`;
- const img=`<img class="map-img-candidate" data-map-photo="${esc(entry.id)}" data-map-angle="${Number(round.mediaAngle)||0}" alt="A stylized original scene reconstruction of an unknown location" loading="eager" decoding="async" />`;
+ const img=`<img class="map-img-candidate" data-map-photo="${esc(entry.id)}" data-map-angle="${Number(round.mediaAngle)||0}" alt="Location image provided by the site owner" loading="eager" decoding="async" />`;
  return `<main class="wrap game map-game gtp2-game-scene gtp2-scene-map"><div class="game-topline"><button class="tiny-link" data-action="home">← BACK TO MODES</button><span class="pill">${session==='daily'?'DAILY':'FREE PLAY'} / MAP RECON</span></div>
- <div class="game-titlebar"><div><span class="kicker">OUTLANDS CARTOGRAPHY / 06</span><h1>GUESS THE MAP<span style="color:#36c3cf">.</span></h1><p>Study the illustrated environment, then pinpoint the sector.</p></div><span class="game-attempts">${round.finished?'DONE':stage===1?3-attempted.length:2-attempted.length}<small> LEFT</small></span></div>
- ${modeRail()}<section class="map-challenge"><div class="map-frame"><div class="panel-top"><span>⌖ UNKNOWN LOCATION / TRANSMISSION</span><small>${state}</small></div><div class="map-photo">${img}<div class="map-offline"><b>IMAGE SIGNAL OFFLINE</b><p>Visual reconstruction unavailable. The written location clue is still playable.</p><span>${esc(entry.clue)}</span></div></div><div class="map-field-report"><b>◈ FIELD OBSERVATION</b><span>${esc(entry.clue)}</span></div><div class="map-credit">ORIGINAL STYLIZED RECONSTRUCTIONS · NOT APEX SCREENSHOTS · TWO CAMERA ANGLES PER LOCATION</div></div>
+ <div class="game-titlebar"><div><span class="kicker">OUTLANDS CARTOGRAPHY / 06</span><h1>GUESS THE MAP<span style="color:#36c3cf">.</span></h1><p>Identify the map and POI using a verified local image or the written clue.</p></div><span class="game-attempts">${round.finished?'DONE':stage===1?3-attempted.length:2-attempted.length}<small> LEFT</small></span></div>
+ ${modeRail()}<section class="map-challenge"><div class="map-frame"><div class="panel-top"><span>⌖ UNKNOWN LOCATION / TRANSMISSION</span><small>${state}</small></div><div class="map-photo">${img}<div class="map-offline"><b>IMAGE SIGNAL OFFLINE</b><p>Verified map image not installed yet. Use the written clue below.</p><span>${esc(entry.clue)}</span></div></div><div class="map-credit">NO VERIFIED POI IMAGE INSTALLED · TEXT CLUE AVAILABLE</div></div>
  <div class="map-terminal"><span class="kicker">${round.finished?'MISSION REPORT':state}</span><h2>${round.finished?(round.won?'TARGET LOCATED!':'TRY ANOTHER SECTOR'):(stage===1?'WHICH MAP?':'WHICH POI?')}</h2><p>${round.finished?`Answer: ${esc(entry.map)} / ${esc(entry.poi)}.`:stage===1?'You have three map attempts. Each wrong map is eliminated.':'Map confirmed. Find the exact location in two attempts.'}</p>
  <div class="map-choices">${round.finished?'':options}</div>${round.finished?`<div class="end-actions"><button class="btn pink" data-action="next">NEXT CHALLENGE ↗</button><button class="btn mint" data-action="again">∞ FREE PLAY</button></div>`:''}
  ${attempted.length?`<div class="map-trail">Eliminated: ${attempted.filter(n=>n!==(stage===1?entry.map:entry.poi)).map(esc).join(', ')||'None'}</div>`:''}</div></section></main>`;
@@ -548,7 +548,7 @@ function render({scroll=true}={}) {
 }
 function openMode(mode,playSession=session){
   if(!MODES.includes(mode))return;
-  stopVoice();voiceClipStatus='';active=mode;session=playSession;screen='game';pickerOpen=false;quickSearch='';ensureRound();render();sound('enter-'+mode);
+  stopVoice();voiceClipStatus='';active=mode;session=playSession;screen='game';pickerOpen=false;quickSearch='';ensureRound();render();sound('nav');
 }
 function submitGuess(name){
   const round=getRound();if(!round||round.finished)return;

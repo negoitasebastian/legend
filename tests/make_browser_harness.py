@@ -2,7 +2,7 @@
 from pathlib import Path
 import re
 root=Path(__file__).resolve().parents[1]
-files=['src/data.mjs','src/art.mjs','src/ability_media_manifest.mjs','src/abilities.mjs','src/engine.mjs','src/spotlight.mjs','src/store.mjs','src/audio.mjs','src/map_media_manifest.mjs','src/concept_map_manifest.mjs','src/maps.mjs','src/tips.mjs','src/voice_manifest.mjs','src/voice.mjs','src/app.mjs']
+files=['src/data.mjs','src/art.mjs','src/ability_media_manifest.mjs','src/abilities.mjs','src/engine.mjs','src/spotlight.mjs','src/store.mjs','src/audio.mjs','src/map_media_manifest.mjs','src/maps.mjs','src/tips.mjs','src/voice_manifest.mjs','src/voice.mjs','src/app.mjs']
 parts=[]
 for fname in files:
     text=(root/fname).read_text()

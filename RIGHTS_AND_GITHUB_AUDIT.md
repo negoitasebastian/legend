@@ -36,13 +36,3 @@ This document is a practical audit, not legal advice or a guarantee against noti
 ## Suggested safest next move
 
 Do not publish this Apex-specific build as "officially safe". Before making it public, obtain permission for the fan-game use and all external or game-derived art/audio, or substantially rework the content into original IP with no EA characters, locations, logos or media. Avoid monetization without checking policy; even non-commercial activity doesn't create blanket permission. Keep source/license proof for every asset. If a rights-holder or GitHub contacts you, respond promptly using official channels.
-
-## V2.2 audit addendum — Neon Phantom
-
-- **72 generated local sector illustrations** (`assets/maps/*-concept-*.webp`) and 28 local transparent, original role-inspired figurines (`assets/legends/*.webp`) were generated in this project with the scripts under `scripts/`. They are **not** real EA assets or accurate game screenshots/models. Their scenes are broad science-fiction interpretations rather than 1:1 recreations.
-- The **20 original local WAV effects** include six newly authored entering-mode stingers; no extracted Apex recordings are bundled.
-- **Quote is now text-only** and no longer offers user-facing voice playback.
-- **EA IP risk remains.** Gameplay revolves around their Legend names/locations, a recognizable fan-inspired hero and older ability icon crops. These facts can still trigger rights-holder objections irrespective of whether the newly created paintings are original. The site is NOT claimed to be safe from DMCA complaints or account consequences.
-- Original local figurines are a stylistic accessibility/fallback solution, not actual 3D renderings of the characters. Claiming they are real would be inaccurate.
-- Legacy `src/art.mjs` retains external portrait URLs as fallback candidates if packaged figure images are removed or fail. Reuse/hotlink rights on those remote images are **unverified**; remove/replace external URLs with licensed art if publishing.
-- Existing 8 `assets/ability-icons/*.png` were imported in previous releases; their provenance/redistribution rights were NOT established in this patch.

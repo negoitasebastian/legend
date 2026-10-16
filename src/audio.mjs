@@ -4,9 +4,7 @@
 const clips=Object.freeze({
  nav:'nav',pick:'pick',clue:'clue',wrong:'wrong',correct:'correct',win:'win',lose:'lose',reveal:'reveal',
  'hover-classic':'hover-classic','hover-pixel':'hover-pixel','hover-quote':'hover-quote',
- 'hover-ability':'hover-ability','hover-emoji':'hover-emoji','hover-map':'hover-map',
- 'enter-classic':'enter-classic','enter-pixel':'enter-pixel','enter-quote':'enter-quote',
- 'enter-ability':'enter-ability','enter-emoji':'enter-emoji','enter-map':'enter-map'
+ 'hover-ability':'hover-ability','hover-emoji':'hover-emoji','hover-map':'hover-map'
 });
 const bank=new Map();const lastAt=new Map();
 function sample(name){
@@ -19,7 +17,7 @@ function sample(name){
  return bank.get(key);
 }
 export function preloadSoundDeck(){
- ['hover-classic','hover-pixel','hover-quote','hover-ability','hover-emoji','hover-map','nav','pick','enter-classic','enter-pixel','enter-quote','enter-ability','enter-emoji','enter-map'].forEach(sample);
+ ['hover-classic','hover-pixel','hover-quote','hover-ability','hover-emoji','hover-map','nav','pick'].forEach(sample);
 }
 export function playSound(name,enabled=true){
  if(!enabled)return false;

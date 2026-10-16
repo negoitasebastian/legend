@@ -1,39 +1,11 @@
 {
-  "version": "GTP2 V2.2 Neon Phantom / Pinkshift 2.0",
-  "generated_original_maps": {
-    "count": 72,
-    "root": "assets/maps",
-    "pattern": "*-concept-*.webp",
-    "generator": "scripts/generate_original_map_art.py",
-    "description": "Original stylized scientific/fantasy scenes, not screenshots or accurate Apex locations"
-  },
-  "generated_original_figures": {
-    "count": 28,
-    "root": "assets/legends",
-    "pattern": "*.webp",
-    "generator": "scripts/generate_local_legend_figures.py",
-    "description": "Original transparent vector-like 2.5D character-role stand-ins, not recognizable EA 3D renders"
-  },
-  "original_audio": {
-    "count": 20,
-    "root": "assets/sfx",
-    "generator": "scripts/generate_mode_stingers.py",
-    "description": "Original local WAV user-interface sounds; 14 from V2.1 plus 6 from this release"
-  },
-  "legacy_ability_images": {
-    "count": 8,
-    "root": "assets/ability-icons",
-    "status": "Rights not established; do not claim approved"
-  },
-  "hero_image": {
-    "path": "assets/decor/haunted-hero.webp",
-    "status": "Newly generated, references a recognizable game character; legal clearance not established"
-  },
-  "remote_art_catalog": {
-    "path": "src/art.mjs",
-    "status": "Unverified third-party hotlinks used only as fallback; external licenses not checked"
-  },
-  "ea_fan_game_policy": {
-    "status": "Potential restriction remains despite new original art"
-  }
+  "version": "GTP2 V2.2.1 Portrait & Map Rollback",
+  "legend_portraits": "Remote pre-existing third-party image catalog, no rights verified or local copy included",
+  "concept_map_images": 0,
+  "actual_map_images": 0,
+  "map_locations": 36,
+  "audio": "14 original WAV clips restored from V2.1",
+  "voice_lines": "None included, Quote text-only",
+  "ability_icons": "8 legacy PNGs with unverified rights",
+  "risk": "EA fan-game/content policy and rights remain unresolved"
 }

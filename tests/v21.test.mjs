@@ -10,7 +10,7 @@ const content=path=>readFileSync(resolve(root,path),'utf8');
 
 test('Pinkshift theme is deployed as a real CSS file',()=>{
  assert.ok(existsSync(resolve(root,'pinkshift.css')));
- assert.ok(content('index.html').includes('pinkshift.css?v=2.2.0'));
+ assert.ok(content('index.html').includes('pinkshift.css?v=2.2.1-rollback'));
  assert.ok(content('.github/workflows/pages.yml').includes('styles.css pinkshift.css'));
  assert.ok(content('pinkshift.css').includes('.gtp2-hero{width:100%;border:0!important'));
 });
@@ -22,8 +22,8 @@ test('genuine local multiple-angle loader avoids external Map hotlinks',()=>{
  }
  assert.ok(content('src/maps.mjs').includes('mapMediaManifest'));
 });
-test('20 original WAVs are present and valid files',()=>{
- const names=['hover-classic','hover-pixel','hover-quote','hover-ability','hover-emoji','hover-map','nav','pick','clue','wrong','correct','win','lose','reveal','enter-classic','enter-pixel','enter-quote','enter-ability','enter-emoji','enter-map'];
+test('14 original WAVs are present and valid files',()=>{
+ const names=['hover-classic','hover-pixel','hover-quote','hover-ability','hover-emoji','hover-map','nav','pick','clue','wrong','correct','win','lose','reveal'];
  for(const name of names){const buffer=readFileSync(resolve(root,`assets/sfx/${name}.wav`));assert.equal(buffer.toString('ascii',0,4),'RIFF');assert.equal(buffer.toString('ascii',8,12),'WAVE');assert.ok(buffer.length>1500);}
  assert.equal(freshStore().settings.audio,true);
  assert.ok(content('src/app.mjs').includes('data-action="sound-test"'));
