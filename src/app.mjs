@@ -196,43 +196,13 @@ function loadMapImages(parent=app){
 function edgeArenaDecor(){
   return `<aside class="edge-arena edge-arena-left" aria-hidden="true"><div class="edge-stitch"></div><span class="edge-glyph">△</span><span class="edge-label">OUTLANDS<br>AFTER HOURS</span><span class="edge-spark">✦ ✧</span></aside><aside class="edge-arena edge-arena-right" aria-hidden="true"><div class="edge-stitch"></div><span class="edge-glyph">◈</span><span class="edge-label">MIRAGE'S<br>HAUNTED ARENA</span><span class="edge-spark">✧ ✦</span></aside>`;
 }
-// One single character lives IN the background art. Canvas follows its existing eyes.
-// The artwork is 1672x941; object-fit cover and object-position:center center.
+// Eye overlay removed in Dark Bloom cleanup. Keep no-op hooks so older code paths remain stable.
 let gazeFrame=0,lastPointer=null;
-function drawGaze(event=lastPointer){
- const canvas=document.getElementById('mirage-gaze');
- const hero=document.querySelector('.gtp2-hero');
- if(!canvas||!hero)return;
- const rect=hero.getBoundingClientRect(),w=rect.width,h=rect.height;
- if(w<20||h<20)return;
- const dpr=Math.min(window.devicePixelRatio||1,2);
- if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr)}
- const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
- const scale=Math.max(w/1672,h/941),ox=(w-1672*scale)/2,oy=(h-941*scale)/2;
- const canMove=store.settings.motion&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches;
- // Small irises only. No additional eyes. Overlay is clipped to the illustrated eye regions.
- for(const [sourceX,sourceY,rx,ry,angle] of [[801,279,12,7.2,-.2],[864,250,10,6.2,-.3]]){
-  const x=ox+sourceX*scale,y=oy+sourceY*scale;
-  if(x<-20||x>w+20||y<-20||y>h+20)continue;
-  const dx=canMove&&event?Math.max(-3.4,Math.min(3.4,(event.clientX-(rect.left+x))/Math.max(w,320)*13)):0;
-  const dy=canMove&&event?Math.max(-2.0,Math.min(2.0,(event.clientY-(rect.top+y))/Math.max(h,320)*10)):0;
-  ctx.save();ctx.translate(x,y);ctx.rotate(angle);
-  ctx.beginPath();ctx.ellipse(0,0,rx*scale,ry*scale,0,0,Math.PI*2);ctx.clip();
-  ctx.fillStyle='rgba(234,198,222,.84)';ctx.fillRect(-rx*scale,-ry*scale,rx*2*scale,ry*2*scale);
-  const cx=dx*scale,cy=dy*scale,rad=4.6*scale;
-  const iris=ctx.createRadialGradient(cx,cy,1,cx,cy,rad);
-  iris.addColorStop(0,'#12091a');iris.addColorStop(.44,'#331628');iris.addColorStop(.7,'#ff741d');iris.addColorStop(1,'#9a46f9');
-  ctx.beginPath();ctx.ellipse(cx,cy,rad,rad*1.12,0,0,Math.PI*2);ctx.fillStyle=iris;ctx.fill();
-  ctx.beginPath();ctx.arc(cx+1.2*scale,cy-1.6*scale,1.2*scale,0,Math.PI*2);ctx.fillStyle='#fff5d7';ctx.fill();ctx.restore();
- }
-}
-window.addEventListener('pointermove',event=>{lastPointer=event;
- if(gazeFrame||!document.getElementById('mirage-gaze'))return;
- gazeFrame=requestAnimationFrame(()=>{gazeFrame=0;drawGaze()});
-},{passive:true});
-window.addEventListener('resize',()=>{if(document.getElementById('mirage-gaze'))drawGaze()},{passive:true});
+function drawGaze(){return;}
+window.addEventListener('pointermove',event=>{lastPointer=event;},{passive:true});
+window.addEventListener('resize',()=>{}, {passive:true});
 function nav(){return `<header class="top gtp2-top"><div class="gtp2-top-inner">
-  <button class="brand gtp2-brand" data-action="home" aria-label="Guess the Predator 2 home"><span class="brand-icon" aria-hidden="true"><span class="brand-apex">G</span></span><span class="brand-text"><strong>GUESS THE <em>PREDATOR</em> <sup>2</sup></strong><small>PINKSHIFT · PORTRAITS RESTORED</small></span></button>
+  <button class="brand gtp2-brand" data-action="home" aria-label="Guess the Predator 2 home"><span class="brand-icon" aria-hidden="true"><span class="brand-apex">G</span></span><span class="brand-text"><strong>GUESS THE <em>PREDATOR</em> <sup>2</sup></strong><small>PINKSHIFT · DARK BLOOM</small></span></button>
   <nav class="topnav" aria-label="Main navigation"><button class="nav-item ${screen==='home'?'active':''}" data-action="home">⌂ HOME</button><button class="nav-item ${screen==='game'?'active':''}" data-action="open" data-mode="classic">◈ PLAY</button><button class="nav-item ${screen==='records'?'active':''}" data-action="records">▤ STATS</button><a class="nav-item" href="./MEDIA_STUDIO.html">◫ MEDIA STUDIO</a></nav>
   <div class="top-actions"><button class="switch gtp2-sound-switch" data-action="audio" aria-label="Toggle original sound effects" aria-pressed="${store.settings.audio}">${store.settings.audio?'♫ SOUND ON':'♪ SOUND OFF'}</button><button class="gtp2-audio-preview" data-action="sound-test" title="Preview original UI sound">▶ TEST</button></div>
  </div></header>`;}
@@ -308,10 +278,10 @@ function home(){
    <img id="gtp2-backdrop" class="gtp2-backdrop" src="./assets/decor/haunted-hero.webp" alt="" aria-hidden="true" fetchpriority="high" />
    <canvas id="mirage-gaze" aria-hidden="true"></canvas><div class="gtp2-vignette" aria-hidden="true"></div>
    <div class="gtp2-hero-content">
-    <div class="gtp2-heading"><div><span class="gtp2-kicker">✦ PINKSHIFT / HAUNTED OUTLANDS</span><h1>GUESS THE <span>PREDATOR.</span></h1><p>Find the legend. Crack the location. Rule the daily hunt.</p></div><div class="gtp2-progress"><small>DAILY PROGRESS · ${esc(today())}</small><strong>${done}<em>/6</em></strong><span>${done===6?'ALL CHALLENGES COMPLETED':'MISSIONS COMPLETED'}</span></div></div>
+    <div class="gtp2-heading"><div><span class="gtp2-kicker">✦ PINKSHIFT / DARK OUTLANDS</span><h1>GUESS THE <span>PREDATOR.</span></h1><p>Find the legend. Crack the location. Rule the daily hunt.</p></div><div class="gtp2-progress"><small>DAILY PROGRESS · ${esc(today())}</small><strong>${done}<em>/6</em></strong><span>${done===6?'ALL CHALLENGES COMPLETED':'MISSIONS COMPLETED'}</span></div></div>
     <div class="gtp2-switchline"><div class="gtp2-session" role="group" aria-label="Daily or Free Play"><button data-action="session" data-session="daily" class="${session==='daily'?'active':''}" aria-pressed="${session==='daily'}">◈ DAILY</button><button data-action="session" data-session="unlimited" class="${session==='unlimited'?'active':''}" aria-pressed="${session==='unlimited'}">∞ FREE PLAY</button></div><span>SELECT YOUR CHALLENGE ✦</span></div>
     <div class="gtp2-mode-layout"><div class="gtp2-mode-column">${MODES.slice(0,3).map((mode,i)=>modeTile(mode,i)).join('')}</div><div class="gtp2-hero-space" aria-hidden="true"></div><div class="gtp2-mode-column">${MODES.slice(3).map((mode,i)=>modeTile(mode,i+3)).join('')}</div></div>
-    <div class="gtp2-hero-footer"><span>${session==='daily'?'ONE DAILY RUN PER MODE':'UNLIMITED PRACTICE · NO STREAK RISK'}</span><button data-action="home-daily" class="gtp2-primary">${unfinished.length?'CONTINUE DAILY':'VIEW RESULTS'} <b>↗</b></button><span>6 ARENAS · 36 ILLUSTRATED SECTORS · 72 VIEWS</span></div>
+    <div class="gtp2-hero-footer"><span>${session==='daily'?'ONE DAILY RUN PER MODE':'UNLIMITED PRACTICE · NO STREAK RISK'}</span><button data-action="home-daily" class="gtp2-primary">${unfinished.length?'CONTINUE DAILY':'VIEW RESULTS'} <b>↗</b></button><span>6 ARENAS · 36 LOCATIONS · TEXT QUOTES</span></div>
    </div>
   </section>
   <div class="gtp2-bottom"><div class="gtp2-side-label"><span>BEYOND THE ARENA</span><small>CHOOSE · COLLECT · DISCOVER</small></div>
@@ -325,7 +295,7 @@ function getVisual(round,target){
     const effect=['mosaic','holo','fragments'].includes(store.settings.pixelStyle)?store.settings.pixelStyle:'mosaic';
     const step=Math.min(round.guesses.length,6);
     const sizes=[18,25,35,51,76,118,176];
-    const blur=[12,10,8,6,4,2,0];
+    const blur=[14,11,8,5,3,1,0];
     const pct=[8,20,33,48,64,82,100];
     const size=sizes[step];
     return `<div class="clue-visual visual-pixel px-effect-${effect}"><div class="pixel-art" style="--px-blur:${blur[step]}px;--px-progress:${pct[step]}%">

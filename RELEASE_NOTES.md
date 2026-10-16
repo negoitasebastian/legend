@@ -1,3 +1,11 @@
+## V2.2.2 Dark Bloom Cleanup
+
+- removed Mirage eye overlay from the homepage hero
+- softened heavy shadows and shifted UI back toward dark pink neon
+- enlarged Browse Legends portrait area for more complete character framing
+- refined Pixel Mode blur progression for cleaner reveal steps
+- kept Quote mode text-only and preserved the rollback-safe asset rules
+
 # Guess The Predator 2 — V2.2.1 Emergency Restoration
 
 **What was deliberately rolled back:**

@@ -1,3 +1,7 @@
+## IMPORTANT CLEAN DEPLOY
+
+If you are replacing an older GTP2 repository, delete these stale files before copying the new build: `src/concept_map_manifest.mjs`, any `assets/maps/*-concept-*.webp`, the folder `assets/legends/`, and any `assets/sfx/enter-*.wav`. Keep `.git`.
+
 > For V2.2.1 rollback and safe repo cleanup, read `ROLLBACK_README.md` first.
 
 # Guess The Predator 2 — Pinkshift Reloaded

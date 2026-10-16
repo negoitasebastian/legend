@@ -565,3 +565,33 @@ html{scroll-behavior:smooth}body{background:#0b0719;color:#f8f2ff}body:before{ba
 @media(max-width:600px){.gtp2-top{height:64px}.gtp2-top-inner{flex-wrap:nowrap}.gtp2-brand{flex:1;min-width:0}.gtp2-brand .brand-text{min-width:0}.gtp2-brand .brand-text small{display:none}.gtp2-brand .brand-text strong{font-size:clamp(14px,4.1vw,18px);white-space:nowrap;letter-spacing:0}.gtp2-top .topnav{display:none}.gtp2-top .top-actions{flex:none}.gtp2-top .top-actions .switch{font-size:8px}.gtp2-hero-content{min-height:calc(100svh - 64px)}}
 /* Original GTP2 hexagonal mark, deliberately distinct from game-company logos */
 .gtp2-brand .brand-icon{clip-path:polygon(50% 0,90% 18%,100% 66%,73% 100%,24% 100%,0 63%,9% 18%);filter:drop-shadow(0 0 11px #b05fff9d)}
+
+
+/* v2.2.2 Dark Bloom cleanup */
+.gtp2-hero #mirage-gaze{display:none!important}
+.gtp2-top{background:linear-gradient(180deg,rgba(22,12,44,.96),rgba(17,10,35,.94))!important;border-bottom:1px solid #6d4ca8!important}
+.gtp2-top .nav-item{color:#f4eaff!important}
+.gtp2-top .nav-item:hover,.gtp2-top .nav-item.active{background:#ff66c425!important;color:#fff!important}
+.gtp2-top .top-actions .switch,.gtp2-audio-preview{background:linear-gradient(180deg,#2b163f,#211434)!important;color:#ffe8fb!important;border-color:#e46cd2!important;box-shadow:0 0 0 1px rgba(255,255,255,.05) inset!important}
+.gtp2-vignette{background:linear-gradient(180deg,rgba(7,4,24,.64),rgba(7,4,24,.1) 24%,rgba(9,4,24,.2) 58%,rgba(6,4,18,.78) 100%),linear-gradient(90deg,rgba(8,3,24,.48),transparent 22%,transparent 78%,rgba(8,3,24,.52))!important}
+.gtp2-mode-card{box-shadow:inset 0 0 0 1px rgba(255,255,255,.05),0 0 12px color-mix(in srgb,var(--tile) 18%,transparent),0 3px 0 rgba(5,4,14,.78)!important;border-color:color-mix(in srgb,var(--tile) 74%,white 8%)!important}
+.gtp2-mode-card:hover,.gtp2-mode-card:focus-visible{box-shadow:0 5px 0 rgba(5,4,14,.8),0 0 18px color-mix(in srgb,var(--tile) 42%,transparent)!important}
+.gtp2-bottom .daily-extras article,.gtp2-bottom .vault-showcase,.gtp2-bottom .stat{box-shadow:0 4px 18px rgba(9,4,24,.34)!important}
+.gtp2-picker{background:linear-gradient(180deg,#f7e9f6,#f0ddf0)!important;box-shadow:0 10px 34px rgba(8,4,20,.55)!important}
+.gtp2-picker .picker-header{background:linear-gradient(180deg,#e6a0ce,#d88dbf)!important}
+.gtp2-picker .picker-search input,.gtp2-picker .picker-search select{background:#fffafb!important}
+.picker-grid{gap:12px!important}
+.picker-legend{background:linear-gradient(180deg,#fdeef7,#f7dff0)!important;box-shadow:0 2px 0 #512b58!important;border-color:#74427d!important}
+.picker-legend:hover{box-shadow:0 5px 12px rgba(67,29,76,.26)!important;transform:translateY(-3px)!important}
+.picker-legend .portrait-holder{height:156px!important;min-height:156px!important;padding:2px 6px 0!important;background:radial-gradient(circle at 50% 16%,#ffe8f7,#efc7ea 60%,#e9d2f8)!important}
+.picker-legend .portrait-holder img{object-fit:contain!important;object-position:center bottom!important;transform:scale(1.06)}
+.picker-legend strong{font-size:13px!important;padding-top:8px!important}
+.picker-legend small{font-size:10px!important;padding-bottom:11px!important}
+.search-result .portrait-holder,.picker-legend .portrait-holder,.answer-tag .portrait-holder{background:linear-gradient(180deg,#fff0f8,#edd4f8)!important}
+.pixel-preset button{background:#1e1438de!important;border-color:#ff8de1!important;color:#ffeffb!important}
+.pixel-preset button.active{background:#ff94d7!important;color:#2a163a!important;border-color:#2b1838!important;box-shadow:none!important}
+.visual-pixel{background:linear-gradient(140deg,#6e49ae,#ad5cc0 52%,#1d6382)!important}
+.visual-pixel.px-effect-mosaic .pixel-canvas{filter:blur(calc(var(--px-blur,0px) * .58)) saturate(1.03) contrast(1.06)!important}
+.visual-pixel.px-effect-holo .pixel-canvas{filter:hue-rotate(46deg) saturate(1.22) contrast(1.08) blur(calc(var(--px-blur, 0px) * .24))!important}
+.visual-pixel.px-effect-fragments .pixel-canvas{filter:saturate(1.06) contrast(1.04) blur(calc(var(--px-blur,0px) * .24))!important}
+@media(max-width:600px){.picker-legend .portrait-holder{height:138px!important;min-height:138px!important}.picker-legend{min-height:180px!important}}
