@@ -1,3 +1,4 @@
+import {mapMediaManifest} from './map_media_manifest.mjs';
 /** Actual POI screenshots are referenced by their documented Wiki filenames.
  * Real game assets are NOT manufactured or silently replaced by generic art.
  * Local files under assets/maps are always preferred when present.
@@ -309,20 +310,21 @@ export const LEGACY_LOCATIONS=Object.freeze([
  {id:'ed-boardwalk',map:'E-District',poi:'Boardwalk',legacy:true,clue:'A brightly lit commercial district in the city.'},
 ]);
 export const resolveLocation=id=>LOCATIONS.find(x=>x.id===id)||LEGACY_LOCATIONS.find(x=>x.id===id);
-const wikiFile=file=>encodeURIComponent(file).replaceAll('%2F','/');
-const localSourcePath=file=>`./assets/maps/${wikiFile(file)}`;
+/** No remote hotlinks. Multiple verified local captures per location, including interiors. */
 export const mapLocalPath=(entry,ext='webp')=>`./assets/maps/${entry.id}.${ext}`;
-/** Source order: user-added vetted local file by id, manually copied original filename, wiki.gg, Fandom archive. */
-export function mapShots(entry){
+const safeLocalName=name=>typeof name==='string' && /^[a-zA-Z0-9_-]+(?:\.[a-zA-Z0-9_-]+)?\.(?:webp|png|jpg|jpeg)$/i.test(name);
+export function mapShots(entry,angle=0){
  if(!entry)return [];
- const local=["webp","jpg","png","jpeg"].map(ext=>mapLocalPath(entry,ext));
- if(entry.file){
-   const f=wikiFile(entry.file);
-   return [...local,`./assets/maps/${f}`,`https://apexlegends.wiki.gg/wiki/Special:Redirect/file/${f}`];
+ const manifest=(mapMediaManifest[entry.id]||[]).filter(safeLocalName)
+   .map(filename=>`./assets/maps/${filename}`);
+ if(manifest.length){
+   const start=((Math.trunc(Number(angle)||0)%manifest.length)+manifest.length)%manifest.length;
+   return [...manifest.slice(start),...manifest.slice(0,start)];
  }
- return local;
+ // Backward-compatible single-image installation without a manifest.
+ return ['webp','png','jpg','jpeg'].map(ext=>mapLocalPath(entry,ext));
 }
-export function mapRound(entry){return {answer:entry.id,stage:1,mapGuesses:[],poiGuesses:[],won:false,finished:false,loss:null,startedAt:null,finishedAt:null};}
+export function mapRound(entry){return {answer:entry.id,stage:1,mapGuesses:[],poiGuesses:[],won:false,finished:false,loss:null,startedAt:null,finishedAt:null,mediaAngle:Math.floor(Math.random()*100000)};}
 export function mapGuess(round,value,entry,now=Date.now()){
  if(round.finished)return round;
  if(round.stage===1){

@@ -176,7 +176,7 @@ function loadMapImages(parent=app){
     const entry=LOCATIONS.find(loc=>loc.id===img.dataset.mapPhoto);
     if(!entry)return;
     const frame=img.closest('.map-photo');
-    const sources=mapShots(entry);
+    const sources=mapShots(entry,Number(img.dataset.mapAngle||0));
     let nextIndex=0;
     const next=()=>{
       if(!img.isConnected)return;
@@ -232,9 +232,9 @@ window.addEventListener('pointermove',event=>{lastPointer=event;
 },{passive:true});
 window.addEventListener('resize',()=>{if(document.getElementById('mirage-gaze'))drawGaze()},{passive:true});
 function nav(){return `<header class="top gtp2-top"><div class="gtp2-top-inner">
-  <button class="brand gtp2-brand" data-action="home" aria-label="Guess the Predator 2 home"><span class="brand-icon" aria-hidden="true"><span class="brand-apex">G</span></span><span class="brand-text"><strong>GUESS THE <em>PREDATOR</em> <sup>2</sup></strong><small>NEON REBIRTH · UNOFFICIAL TRIVIA</small></span></button>
+  <button class="brand gtp2-brand" data-action="home" aria-label="Guess the Predator 2 home"><span class="brand-icon" aria-hidden="true"><span class="brand-apex">G</span></span><span class="brand-text"><strong>GUESS THE <em>PREDATOR</em> <sup>2</sup></strong><small>PINKSHIFT RELOADED · UNOFFICIAL TRIVIA</small></span></button>
   <nav class="topnav" aria-label="Main navigation"><button class="nav-item ${screen==='home'?'active':''}" data-action="home">⌂ HOME</button><button class="nav-item ${screen==='game'?'active':''}" data-action="open" data-mode="classic">◈ PLAY</button><button class="nav-item ${screen==='records'?'active':''}" data-action="records">▤ STATS</button><a class="nav-item" href="./MEDIA_STUDIO.html">◫ MEDIA STUDIO</a></nav>
-  <div class="top-actions"><button class="switch" data-action="audio" aria-label="Toggle sound effects" aria-pressed="${store.settings.audio}">${store.settings.audio?'♫ SOUND ON':'♪ SOUND OFF'}</button></div>
+  <div class="top-actions"><button class="switch gtp2-sound-switch" data-action="audio" aria-label="Toggle original sound effects" aria-pressed="${store.settings.audio}">${store.settings.audio?'♫ SOUND ON':'♪ SOUND OFF'}</button><button class="gtp2-audio-preview" data-action="sound-test" title="Preview original UI sound">▶ TEST</button></div>
  </div></header>`;}
 function statCards(){
   const day=store.days[today()]||{};const stats=streak(store.days,utcDay());
@@ -308,15 +308,15 @@ function home(){
    <img id="gtp2-backdrop" class="gtp2-backdrop" src="./assets/decor/haunted-hero.webp" alt="" aria-hidden="true" fetchpriority="high" />
    <canvas id="mirage-gaze" aria-hidden="true"></canvas><div class="gtp2-vignette" aria-hidden="true"></div>
    <div class="gtp2-hero-content">
-    <div class="gtp2-heading"><div><span class="gtp2-kicker">✦ OUTLANDS ARCADE / HALLOWEEN SIGNAL</span><h1>GUESS THE <span>PREDATOR.</span></h1><p>Find the legend. Crack the location. Rule the daily hunt.</p></div><div class="gtp2-progress"><small>DAILY PROGRESS · ${esc(today())}</small><strong>${done}<em>/6</em></strong><span>${done===6?'ALL CHALLENGES COMPLETED':'MISSIONS COMPLETED'}</span></div></div>
+    <div class="gtp2-heading"><div><span class="gtp2-kicker">✦ PINKSHIFT / HAUNTED OUTLANDS</span><h1>GUESS THE <span>PREDATOR.</span></h1><p>Find the legend. Crack the location. Rule the daily hunt.</p></div><div class="gtp2-progress"><small>DAILY PROGRESS · ${esc(today())}</small><strong>${done}<em>/6</em></strong><span>${done===6?'ALL CHALLENGES COMPLETED':'MISSIONS COMPLETED'}</span></div></div>
     <div class="gtp2-switchline"><div class="gtp2-session" role="group" aria-label="Daily or Free Play"><button data-action="session" data-session="daily" class="${session==='daily'?'active':''}" aria-pressed="${session==='daily'}">◈ DAILY</button><button data-action="session" data-session="unlimited" class="${session==='unlimited'?'active':''}" aria-pressed="${session==='unlimited'}">∞ FREE PLAY</button></div><span>SELECT YOUR CHALLENGE ✦</span></div>
     <div class="gtp2-mode-layout"><div class="gtp2-mode-column">${MODES.slice(0,3).map((mode,i)=>modeTile(mode,i)).join('')}</div><div class="gtp2-hero-space" aria-hidden="true"></div><div class="gtp2-mode-column">${MODES.slice(3).map((mode,i)=>modeTile(mode,i+3)).join('')}</div></div>
-    <div class="gtp2-hero-footer"><span>${session==='daily'?'ONE DAILY RUN PER MODE':'UNLIMITED PRACTICE · NO STREAK RISK'}</span><button data-action="home-daily" class="gtp2-primary">${unfinished.length?'CONTINUE DAILY':'VIEW RESULTS'} <b>↗</b></button><span>6 MAPS · 36 LOCATION CHALLENGES</span></div>
+    <div class="gtp2-hero-footer"><span>${session==='daily'?'ONE DAILY RUN PER MODE':'UNLIMITED PRACTICE · NO STREAK RISK'}</span><button data-action="home-daily" class="gtp2-primary">${unfinished.length?'CONTINUE DAILY':'VIEW RESULTS'} <b>↗</b></button><span>6 MAPS · 36 SECTORS · MULTIPLE ANGLES</span></div>
    </div>
   </section>
   <div class="gtp2-bottom"><div class="gtp2-side-label"><span>BEYOND THE ARENA</span><small>CHOOSE · COLLECT · DISCOVER</small></div>
   ${dailyExtras()}${forbiddenPanel()}${statCards()}
-  <footer class="gtp2-disclaimer">This unofficial fan-trivia website is not endorsed by or affiliated with EA or its licensors. <a href="./MEDIA_STUDIO.html">MEDIA STUDIO</a> · <a href="./MEDIA_DIAGNOSTIC.html">MEDIA CHECK</a></footer></div>
+  <footer class="gtp2-disclaimer">This independent trivia project is not endorsed by or affiliated with EA or its licensors. Character names and gameplay references belong to their respective owners. No extracted game audio is supplied. <a href="./MEDIA_STUDIO.html">MEDIA STUDIO</a> · <a href="./MEDIA_DIAGNOSTIC.html">MEDIA CHECK</a></footer></div>
  </main>`;
 }
 function getVisual(round,target){
@@ -394,10 +394,10 @@ function mapGame(){
  const used=new Set(attempted);
  const options=choices.map(choice=>`<button class="map-choice ${used.has(choice)?'eliminated':''}" data-action="map-guess" data-name="${esc(choice)}" ${round.finished||used.has(choice)?'disabled':''}>${esc(choice)}${used.has(choice)?' ×':''}</button>`).join('');
  const state=round.finished?(round.won?'✓ SECTOR CONFIRMED':'✕ SIGNAL LOST'):`STAGE ${stage} / 2 · ${stage===1?'IDENTIFY MAP':'IDENTIFY POI'}`;
- const img=`<img class="map-img-candidate" data-map-photo="${esc(entry.id)}" alt="An actual Apex Legends location screenshot when a valid source is available" loading="eager" decoding="async" />`;
+ const img=`<img class="map-img-candidate" data-map-photo="${esc(entry.id)}" data-map-angle="${Number(round.mediaAngle)||0}" alt="An actual Apex Legends location screenshot when a valid source is available" loading="eager" decoding="async" />`;
  return `<main class="wrap game map-game"><div class="game-topline"><button class="tiny-link" data-action="home">← BACK TO MODES</button><span class="pill">${session==='daily'?'DAILY':'FREE PLAY'} / MAP RECON</span></div>
  <div class="game-titlebar"><div><span class="kicker">OUTLANDS CARTOGRAPHY / 06</span><h1>GUESS THE MAP<span style="color:#36c3cf">.</span></h1><p>Recognize the landscape, then pinpoint the POI.</p></div><span class="game-attempts">${round.finished?'DONE':stage===1?3-attempted.length:2-attempted.length}<small> LEFT</small></span></div>
- ${modeRail()}<section class="map-challenge"><div class="map-frame"><div class="panel-top"><span>⌖ UNKNOWN LOCATION / TRANSMISSION</span><small>${state}</small></div><div class="map-photo">${img}<div class="map-offline"><b>IMAGE SIGNAL OFFLINE</b><p>This POI needs a genuine local capture. The text clue still works; to install the photo, use Media Studio.</p><span>${esc(entry.clue)}</span><a class="map-media-link" target="_blank" rel="noopener" href="./MEDIA_STUDIO.html">OPEN MEDIA STUDIO ↗</a></div></div><div class="map-credit">Local assets/maps/ image preferred · User-supplied gameplay captures preferred · No generated stand-ins</div></div>
+ ${modeRail()}<section class="map-challenge"><div class="map-frame"><div class="panel-top"><span>⌖ UNKNOWN LOCATION / TRANSMISSION</span><small>${state}</small></div><div class="map-photo">${img}<div class="map-offline"><b>IMAGE SIGNAL OFFLINE</b><p>This sector has no licensed local capture yet. Play using the text clue, or add a permitted screenshot with Media Studio.</p><span>${esc(entry.clue)}</span><a class="map-media-link" target="_blank" rel="noopener" href="./MEDIA_STUDIO.html">OPEN MEDIA STUDIO ↗</a></div></div><div class="map-credit">Multiple local angles supported · Only media cleared for redistribution</div></div>
  <div class="map-terminal"><span class="kicker">${round.finished?'MISSION REPORT':state}</span><h2>${round.finished?(round.won?'TARGET LOCATED!':'TRY ANOTHER SECTOR'):(stage===1?'WHICH MAP?':'WHICH POI?')}</h2><p>${round.finished?`Answer: ${esc(entry.map)} / ${esc(entry.poi)}.`:stage===1?'You have three map attempts. Each wrong map is eliminated.':'Map confirmed. Find the exact location in two attempts.'}</p>
  <div class="map-choices">${round.finished?'':options}</div>${round.finished?`<div class="end-actions"><button class="btn pink" data-action="next">NEXT CHALLENGE ↗</button><button class="btn mint" data-action="again">∞ FREE PLAY</button></div>`:''}
  ${attempted.length?`<div class="map-trail">Eliminated: ${attempted.filter(n=>n!==(stage===1?entry.map:entry.poi)).map(esc).join(', ')||'None'}</div>`:''}</div></section></main>`;
@@ -634,6 +634,7 @@ app.addEventListener('click',event=>{
   }
   else if(action==='session'){session=button.dataset.session;render({scroll:false});sound('nav');}
   else if(action==='audio'){store.settings.audio=!store.settings.audio;sync();sound('pick');render({scroll:false});}
+  else if(action==='sound-test'){if(!store.settings.audio){store.settings.audio=true;sync();}sound('reveal');render({scroll:false});}
   else if(action==='motion'){store.settings.motion=!store.settings.motion;sync();render({scroll:false});}
   else if(action==='picker'){pickerOpen=true;pickerSearch='';pickerClass='All';pickerSort='az';renderPicker();sound('pick');}
   else if(action==='close-picker'){pickerOpen=false;document.getElementById('picker-backdrop')?.remove();}

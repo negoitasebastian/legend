@@ -1,13 +1,30 @@
-# START HERE — Guess The Predator 2
+# Guess The Predator 2 — Pinkshift Reloaded
 
-1. Download and extract the FULL project ZIP.
-2. Create a completely new empty GitHub repository (`guess-the-predator-2`).
-3. Copy the **contents** of the ZIP to the repo ROOT — `index.html`, `src`, `assets`, `.github` all at the top level.
-4. Commit and Push through GitHub Desktop.
-5. In GitHub **Settings → Pages → Source → GitHub Actions**.
-6. Wait for the deploy workflow to finish (green).
-7. Open `https://YOUR-USERNAME.github.io/guess-the-predator-2/`.
+**PUBLICATION CAUTION:** Read `RIGHTS_AND_GITHUB_AUDIT.md` first. The site's game-specific content has not been fully cleared. EA's published content policy restricts fan games, so this package is intended for local review/development until permissions or appropriate legal review are completed.
 
-**Important:** This is the clean v2 repo and does not import old V16 saves. The homepage is borderless, with one original illustration. Map Mode offers 36 specific POI challenges, but authentic screenshots and human-recorded voices **are not yet included**. Open `MEDIA_STUDIO.html` to add permitted files for those clues; it exports a ZIP to overlay into your repository. `MEDIA_DIAGNOSTIC.html` shows the actual available media.
+## Preview / local development
 
-No npm needed. UI is English. Contact EA / rights holders as appropriate regarding distribution of their game content and talent recordings.
+No npm required. From the project root, run `python -m http.server 8000`, then open `http://localhost:8000/` in your browser. Opening index.html via `file://` may block ES Modules.
+
+## If authorized to publish on GitHub Pages
+
+1. Create a brand-new repository (e.g. `guess-the-predator-2`).
+2. Extract the ZIP. Copy **all contents of the ZIP** directly to repository root (`index.html`, `pinkshift.css`, `styles.css`, `src`, `assets`, `.github`). Do not wrap them inside an extra folder.
+3. Commit and Push via GitHub Desktop to the main branch.
+4. GitHub → Settings → Pages → Build and deployment → Source: **GitHub Actions**. Wait for workflow to turn green.
+5. Clear cache or press Ctrl+F5 if the old theme still appears.
+
+## Media Studio workflow
+
+- Open `MEDIA_STUDIO.html` on the site. Each map/POI accepts **up to eight** distinct local images. Imports are not uploaded automatically.
+- Use only media with public distribution permission. Confirm rights checkbox; export media pack ZIP; extract it over repo root and push.
+- Install genuine permitted character recordings through Studio if available. They will work with the existing playback control; synthetic impersonations are not included.
+- `MEDIA_DIAGNOSTIC.html` shows actual files found by the browser.
+
+## Status
+
+- 36 configured Map sectors, including interiors; **0 actual licensed Map screenshots** supplied.
+- 8 local Ability crops; 20 need authorized artwork.
+- **14 original UI audio clips installed and playable** after user interaction.
+- 0 character voices bundled (human recordings require appropriate permission).
+- Remote portrait hotlinks currently remain an unresolved rights/reliability concern.

@@ -1,3 +1,4 @@
+import {installedAbilityFiles} from './ability_media_manifest.mjs';
 /**
  * User-provided screenshot supplies eight locally cropped genuine passive ability icons.
  * Other entries use candidate filenames from the public Apex ability wiki. These remote
@@ -34,19 +35,19 @@ export const abilityNames = Object.freeze({
   wattson:'Spark of Genius',
   wraith:'Voices from the Void',
 });
-export const localAbilitySlugs = Object.freeze([
-  'revenant','catalyst','lifeline','bangalore','loba','alter','fuse','gibraltar',
-]);
+const bundled = ['revenant','catalyst','lifeline','bangalore','loba','alter','fuse','gibraltar'];
+const imported = Object.entries(installedAbilityFiles)
+  .filter(([slug,filename])=>abilityNames[slug] && typeof filename==='string' && /^[a-z0-9-]+\.(?:png|webp|jpg|jpeg)$/i.test(filename))
+  .map(([slug])=>slug);
+export const localAbilitySlugs = Object.freeze([...new Set([...bundled,...imported])]);
 const local=new Set(localAbilitySlugs);
-/** Only the eight user-provided, decoded local PNGs are eligible.
- * The Wiki fallback never enters the game pool without a real local file.
- */
+/** Only bundled or explicitly imported local files are offered as mystery icons. */
 export function abilityCandidates(slug){
-  return local.has(slug)?[
-    `./assets/ability-icons/${slug}.png`,
-    `./assets/ability-icons/${slug}.webp`,
-    `./assets/ability-icons/${slug}.jpg`,
-    `./assets/ability-icons/${slug}.jpeg`,
-    `./assets/ability-icons/${slug}.svg`,
-  ]:[];
+ if(!local.has(slug))return [];
+ const importedFile=installedAbilityFiles[slug];
+ return [...(importedFile?[`./assets/ability-icons/${importedFile}`]:[]),
+   `./assets/ability-icons/${slug}.png`,
+   `./assets/ability-icons/${slug}.webp`,
+   `./assets/ability-icons/${slug}.jpg`,
+   `./assets/ability-icons/${slug}.jpeg`];
 }
