@@ -10,7 +10,7 @@ const content=path=>readFileSync(resolve(root,path),'utf8');
 
 test('Pinkshift theme is deployed as a real CSS file',()=>{
  assert.ok(existsSync(resolve(root,'pinkshift.css')));
- assert.ok(content('index.html').includes('pinkshift.css?v=2.2.1-rollback'));
+ assert.ok(content('index.html').includes('pinkshift.css?v=2.3.0'));
  assert.ok(content('.github/workflows/pages.yml').includes('styles.css pinkshift.css'));
  assert.ok(content('pinkshift.css').includes('.gtp2-hero{width:100%;border:0!important'));
 });
@@ -18,7 +18,8 @@ test('genuine local multiple-angle loader avoids external Map hotlinks',()=>{
  assert.equal(LOCATIONS.length,36);
  for(const entry of LOCATIONS){
   assert.equal(entry.kind==='Interior'||entry.kind==='Exterior',true);
-  for(const asset of mapShots(entry))assert.ok(asset.startsWith('./assets/maps/'));
+  for(const asset of mapShots(entry))assert.ok(asset.startsWith('./assets/maps/')||asset.startsWith('./assets/map-recon/'));
+  assert.ok(mapShots(entry).at(-1).endsWith(entry.id+'.svg'));
  }
  assert.ok(content('src/maps.mjs').includes('mapMediaManifest'));
 });

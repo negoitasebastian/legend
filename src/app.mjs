@@ -6,6 +6,7 @@ import {artCatalog} from './art.mjs';
 import {abilityCandidates,localAbilitySlugs} from './abilities.mjs';
 import {dailySpotlight,wheelChoices,wheelPick,destinationRotation} from './spotlight.mjs';
 import {playSound} from './audio.mjs';
+import {say,stopAnnouncer,announcerAvailable} from './announcer.mjs';
 import {loadStore,saveStore} from './store.mjs';
 import {FIELDS,LABELS,MODES,MODE_NAMES,CLASS_NAMES,MAX_GUESSES,MAX_HINTS,maxGuesses,utcDay,puzzleAnswers,newRound,tryGuess,expireRound,
   getHint,availableHintFields,formatValue,gameScore,gameRank,scannerState,filteredRoster,remainingTime,dayCount,streak,legendByName} from './engine.mjs';
@@ -48,6 +49,7 @@ const styleBadges=round=>{const tags=[];if(round.won&&round.guesses.length<=3&&!
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const classOf=mode=>COLORS[mode]||'#ff91b7';
 const sound=name=>playSound(name,store.settings.audio);
+const voiceCue=name=>{void say(name,store.settings.announcer&&store.settings.audio);};
 const sync=()=>saveStore(store);
 const getRound=()=>session==='daily'?store.days[today()]?.[active]:store.practice[active];
 function setRound(round){
@@ -188,6 +190,7 @@ function loadMapImages(parent=app){
     img.addEventListener('load',()=>{
       if(img.naturalWidth<180||img.naturalHeight<100){next();return;}
       frame?.classList.add('has-map-art');
+      frame?.classList.toggle('recon-art',img.currentSrc.includes('/map-recon/'));
     });
     img.addEventListener('error',next);
     next();
@@ -196,15 +199,11 @@ function loadMapImages(parent=app){
 function edgeArenaDecor(){
   return `<aside class="edge-arena edge-arena-left" aria-hidden="true"><div class="edge-stitch"></div><span class="edge-glyph">△</span><span class="edge-label">OUTLANDS<br>AFTER HOURS</span><span class="edge-spark">✦ ✧</span></aside><aside class="edge-arena edge-arena-right" aria-hidden="true"><div class="edge-stitch"></div><span class="edge-glyph">◈</span><span class="edge-label">MIRAGE'S<br>HAUNTED ARENA</span><span class="edge-spark">✧ ✦</span></aside>`;
 }
-// Eye overlay removed in Dark Bloom cleanup. Keep no-op hooks so older code paths remain stable.
-let gazeFrame=0,lastPointer=null;
-function drawGaze(){return;}
-window.addEventListener('pointermove',event=>{lastPointer=event;},{passive:true});
-window.addEventListener('resize',()=>{}, {passive:true});
+// The character is painted only once inside the backdrop art. No artificial gaze overlay.
 function nav(){return `<header class="top gtp2-top"><div class="gtp2-top-inner">
-  <button class="brand gtp2-brand" data-action="home" aria-label="Guess the Predator 2 home"><span class="brand-icon" aria-hidden="true"><span class="brand-apex">G</span></span><span class="brand-text"><strong>GUESS THE <em>PREDATOR</em> <sup>2</sup></strong><small>PINKSHIFT · DARK BLOOM</small></span></button>
+  <button class="brand gtp2-brand" data-action="home" aria-label="Guess the Predator 2 home"><span class="brand-icon" aria-hidden="true"><span class="brand-apex">G</span></span><span class="brand-text"><strong>GUESS THE <em>PREDATOR</em> <sup>2</sup></strong><small>DARK PINK · REFORGED V2.3</small></span></button>
   <nav class="topnav" aria-label="Main navigation"><button class="nav-item ${screen==='home'?'active':''}" data-action="home">⌂ HOME</button><button class="nav-item ${screen==='game'?'active':''}" data-action="open" data-mode="classic">◈ PLAY</button><button class="nav-item ${screen==='records'?'active':''}" data-action="records">▤ STATS</button><a class="nav-item" href="./MEDIA_STUDIO.html">◫ MEDIA STUDIO</a></nav>
-  <div class="top-actions"><button class="switch gtp2-sound-switch" data-action="audio" aria-label="Toggle original sound effects" aria-pressed="${store.settings.audio}">${store.settings.audio?'♫ SOUND ON':'♪ SOUND OFF'}</button><button class="gtp2-audio-preview" data-action="sound-test" title="Preview original UI sound">▶ TEST</button></div>
+  <div class="top-actions"><button class="switch gtp2-sound-switch" data-action="audio" aria-label="Toggle original sound effects" aria-pressed="${store.settings.audio}">${store.settings.audio?'♫ SOUND ON':'♪ SOUND OFF'}</button><button class="gtp2-audio-preview" data-action="sound-test" title="Preview original UI sound">◖)) TEST</button><button class="gtp2-voice-toggle" data-action="announcer" title="CC0 human voice announcer" aria-pressed="${store.settings.announcer}">${store.settings.announcer?'🎙 HUMAN ON':'🎙 HUMAN OFF'}</button></div>
  </div></header>`;}
 function statCards(){
   const day=store.days[today()]||{};const stats=streak(store.days,utcDay());
@@ -276,12 +275,12 @@ function home(){
  return `<main class="gtp2-home">
   <section class="gtp2-hero" aria-label="Guess the Predator 2 — six game modes">
    <img id="gtp2-backdrop" class="gtp2-backdrop" src="./assets/decor/haunted-hero.webp" alt="" aria-hidden="true" fetchpriority="high" />
-   <canvas id="mirage-gaze" aria-hidden="true"></canvas><div class="gtp2-vignette" aria-hidden="true"></div>
+   <div class="gtp2-vignette" aria-hidden="true"></div>
    <div class="gtp2-hero-content">
-    <div class="gtp2-heading"><div><span class="gtp2-kicker">✦ PINKSHIFT / DARK OUTLANDS</span><h1>GUESS THE <span>PREDATOR.</span></h1><p>Find the legend. Crack the location. Rule the daily hunt.</p></div><div class="gtp2-progress"><small>DAILY PROGRESS · ${esc(today())}</small><strong>${done}<em>/6</em></strong><span>${done===6?'ALL CHALLENGES COMPLETED':'MISSIONS COMPLETED'}</span></div></div>
+    <div class="gtp2-heading"><div><span class="gtp2-kicker">✦ DARK PINK / HAUNTED OUTLANDS</span><h1>GUESS THE <span>PREDATOR.</span></h1><p>Find the legend. Crack the location. Rule the daily hunt.</p></div><div class="gtp2-progress"><small>DAILY PROGRESS · ${esc(today())}</small><strong>${done}<em>/6</em></strong><span>${done===6?'ALL CHALLENGES COMPLETED':'MISSIONS COMPLETED'}</span></div></div>
     <div class="gtp2-switchline"><div class="gtp2-session" role="group" aria-label="Daily or Free Play"><button data-action="session" data-session="daily" class="${session==='daily'?'active':''}" aria-pressed="${session==='daily'}">◈ DAILY</button><button data-action="session" data-session="unlimited" class="${session==='unlimited'?'active':''}" aria-pressed="${session==='unlimited'}">∞ FREE PLAY</button></div><span>SELECT YOUR CHALLENGE ✦</span></div>
     <div class="gtp2-mode-layout"><div class="gtp2-mode-column">${MODES.slice(0,3).map((mode,i)=>modeTile(mode,i)).join('')}</div><div class="gtp2-hero-space" aria-hidden="true"></div><div class="gtp2-mode-column">${MODES.slice(3).map((mode,i)=>modeTile(mode,i+3)).join('')}</div></div>
-    <div class="gtp2-hero-footer"><span>${session==='daily'?'ONE DAILY RUN PER MODE':'UNLIMITED PRACTICE · NO STREAK RISK'}</span><button data-action="home-daily" class="gtp2-primary">${unfinished.length?'CONTINUE DAILY':'VIEW RESULTS'} <b>↗</b></button><span>6 ARENAS · 36 LOCATIONS · TEXT QUOTES</span></div>
+    <div class="gtp2-hero-footer"><span>${session==='daily'?'ONE DAILY RUN PER MODE':'UNLIMITED PRACTICE · NO STREAK RISK'}</span><button data-action="home-daily" class="gtp2-primary">${unfinished.length?'CONTINUE DAILY':'VIEW RESULTS'} <b>↗</b></button><span>6 ARENAS · 36 LOCATION RECONS · CC0 HUMAN ANNOUNCER</span></div>
    </div>
   </section>
   <div class="gtp2-bottom"><div class="gtp2-side-label"><span>BEYOND THE ARENA</span><small>CHOOSE · COLLECT · DISCOVER</small></div>
@@ -295,7 +294,7 @@ function getVisual(round,target){
     const effect=['mosaic','holo','fragments'].includes(store.settings.pixelStyle)?store.settings.pixelStyle:'mosaic';
     const step=Math.min(round.guesses.length,6);
     const sizes=[18,25,35,51,76,118,176];
-    const blur=[14,11,8,5,3,1,0];
+    const blur=[18,14,10,6,3,1,0];
     const pct=[8,20,33,48,64,82,100];
     const size=sizes[step];
     return `<div class="clue-visual visual-pixel px-effect-${effect}"><div class="pixel-art" style="--px-blur:${blur[step]}px;--px-progress:${pct[step]}%">
@@ -304,7 +303,7 @@ function getVisual(round,target){
       <div class="pixel-error" aria-hidden="true">WAITING FOR IMAGE SIGNAL…</div><div class="pixel-scratch scratch-a"></div><div class="pixel-scratch scratch-b"></div><div class="pixel-scan"></div><div class="pixel-vignette"></div>
       </div><div class="pixel-dots"></div><div class="pixel-caption">DECRYPTION ${pct[step]}% · ${maxGuesses(round)-round.guesses.length} MOVES LEFT</div><div class="pixel-preset" role="group" aria-label="Choose pixel reveal effect">${[['mosaic','▦ MOSAIC'],['holo','⌁ HOLO'],['fragments','◇ FRAGMENTS']].map(([value,label])=>`<button class="${effect===value?'active':''}" type="button" data-action="pixel-style" data-style="${value}" aria-pressed="${effect===value}">${label}</button>`).join('')}</div></div>`;
   }
-  if(mode==='quote')return `<div class="clue-visual gtp2-quote-rework"><div class="gtp2-quote-lines" aria-hidden="true"></div><div class="gtp2-quote-head"><span>◈ DECRYPTED / TEXT ONLY</span><span>CHANNEL 0${MODES.indexOf(active)+1}</span></div><div class="gtp2-quote-mark" aria-hidden="true">“</div><blockquote>“${esc(target.quote)}”</blockquote><div class="gtp2-quote-status"><span class="gtp2-live-dot"></span> ENCRYPTED SIGNAL · IDENTIFY THE SPEAKER</div></div>`;
+  if(mode==='quote')return `<div class="clue-visual gtp2-quote-rework"><div class="gtp2-quote-lines" aria-hidden="true"></div><div class="gtp2-quote-head"><span>◈ ORIGINAL QUOTE / NO VOICE IMPERSONATION</span><span>CHANNEL 0${MODES.indexOf(active)+1}</span></div><div class="gtp2-quote-mark" aria-hidden="true">“</div><blockquote>“${esc(target.quote)}”</blockquote><div class="gtp2-quote-status"><span class="gtp2-live-dot"></span> ENCRYPTED SIGNAL · IDENTIFY THE SPEAKER</div></div>`;
   if(mode==='ability')return `<div class="clue-visual visual-ability"><div class="ability-stage" aria-label="Recognize the Apex ability icon"><div class="ability-outer-orbit"></div><div class="ability-symbol" role="img" aria-label="Unidentified in-game passive ability icon"><img data-ability="${esc(target.slug)}" alt="" loading="eager"/><span class="ability-wait">LOADING ABILITY<br>ICON…</span><span class="ability-fail">ABILITY ICON<br>UNAVAILABLE</span></div><span class="ability-tag">PASSIVE // IMAGE ONLY</span></div></div>`;
   if(mode==='emoji'){
     const all=[...target.emoji.split(/\s+/),...target.extraEmoji];
@@ -364,11 +363,11 @@ function mapGame(){
  const used=new Set(attempted);
  const options=choices.map(choice=>`<button class="map-choice ${used.has(choice)?'eliminated':''}" data-action="map-guess" data-name="${esc(choice)}" ${round.finished||used.has(choice)?'disabled':''}>${esc(choice)}${used.has(choice)?' ×':''}</button>`).join('');
  const state=round.finished?(round.won?'✓ SECTOR CONFIRMED':'✕ SIGNAL LOST'):`STAGE ${stage} / 2 · ${stage===1?'IDENTIFY MAP':'IDENTIFY POI'}`;
- const img=`<img class="map-img-candidate" data-map-photo="${esc(entry.id)}" data-map-angle="${Number(round.mediaAngle)||0}" alt="Location image provided by the site owner" loading="eager" decoding="async" />`;
+ const img=`<img class="map-img-candidate" data-map-photo="${esc(entry.id)}" data-map-angle="${Number(round.mediaAngle)||0}" alt="POI-specific landmark clue illustration or owner-provided gameplay screenshot" loading="eager" decoding="async" />`;
  return `<main class="wrap game map-game gtp2-game-scene gtp2-scene-map"><div class="game-topline"><button class="tiny-link" data-action="home">← BACK TO MODES</button><span class="pill">${session==='daily'?'DAILY':'FREE PLAY'} / MAP RECON</span></div>
- <div class="game-titlebar"><div><span class="kicker">OUTLANDS CARTOGRAPHY / 06</span><h1>GUESS THE MAP<span style="color:#36c3cf">.</span></h1><p>Identify the map and POI using a verified local image or the written clue.</p></div><span class="game-attempts">${round.finished?'DONE':stage===1?3-attempted.length:2-attempted.length}<small> LEFT</small></span></div>
- ${modeRail()}<section class="map-challenge"><div class="map-frame"><div class="panel-top"><span>⌖ UNKNOWN LOCATION / TRANSMISSION</span><small>${state}</small></div><div class="map-photo">${img}<div class="map-offline"><b>IMAGE SIGNAL OFFLINE</b><p>Verified map image not installed yet. Use the written clue below.</p><span>${esc(entry.clue)}</span></div></div><div class="map-credit">NO VERIFIED POI IMAGE INSTALLED · TEXT CLUE AVAILABLE</div></div>
- <div class="map-terminal"><span class="kicker">${round.finished?'MISSION REPORT':state}</span><h2>${round.finished?(round.won?'TARGET LOCATED!':'TRY ANOTHER SECTOR'):(stage===1?'WHICH MAP?':'WHICH POI?')}</h2><p>${round.finished?`Answer: ${esc(entry.map)} / ${esc(entry.poi)}.`:stage===1?'You have three map attempts. Each wrong map is eliminated.':'Map confirmed. Find the exact location in two attempts.'}</p>
+ <div class="game-titlebar"><div><span class="kicker">OUTLANDS CARTOGRAPHY / 06</span><h1>GUESS THE MAP<span style="color:#ff6ebf">.</span></h1><p>Inspect location-specific architectural clues. Real screenshots take priority when installed.</p></div><span class="game-attempts">${round.finished?'DONE':stage===1?3-attempted.length:2-attempted.length}<small> LEFT</small></span></div>
+ ${modeRail()}<section class="map-challenge"><div class="map-frame"><div class="panel-top"><span>⌖ UNKNOWN LOCATION / TRANSMISSION</span><small>${state}</small></div><div class="map-photo">${img}<div class="map-offline"><b>IMAGE SIGNAL OFFLINE</b><p>Verified map image not installed yet. Use the written clue below.</p><span>${esc(entry.clue)}</span></div></div><div class="map-credit"><span class="recon-credit">ORIGINAL LANDMARK RECONSTRUCTION · NOT A GAME SCREENSHOT</span><span class="capture-credit">OWNER-PROVIDED LOCAL SCREENSHOT</span></div></div>
+ <div class="map-terminal"><span class="kicker">${round.finished?'MISSION REPORT':state}</span><h2>${round.finished?(round.won?'TARGET LOCATED!':'TRY ANOTHER SECTOR'):(stage===1?'WHICH MAP?':'WHICH POI?')}</h2><p>${round.finished?`Answer: ${esc(entry.map)} / ${esc(entry.poi)}.`:stage===1?'You have three map attempts. Each wrong map is eliminated.':'Map confirmed. Find the exact location in two attempts.'}</p><div class="map-structural-intel"><small>⌖ LANDMARK READOUT</small><p>${esc(entry.clue)}</p></div>
  <div class="map-choices">${round.finished?'':options}</div>${round.finished?`<div class="end-actions"><button class="btn pink" data-action="next">NEXT CHALLENGE ↗</button><button class="btn mint" data-action="again">∞ FREE PLAY</button></div>`:''}
  ${attempted.length?`<div class="map-trail">Eliminated: ${attempted.filter(n=>n!==(stage===1?entry.map:entry.poi)).map(esc).join(', ')||'None'}</div>`:''}</div></section></main>`;
 }
@@ -511,14 +510,13 @@ function render({scroll=true}={}) {
   loadPortraitImages();
   loadAbilityImages();
   loadMapImages();
-  drawGaze();
   if(scroll)window.scrollTo({top:0,behavior:'instant'});
   if(screen==='game'&&!getRound()?.finished)updateSearchResults();
   if(pickerOpen)renderPicker();
 }
 function openMode(mode,playSession=session){
   if(!MODES.includes(mode))return;
-  stopVoice();voiceClipStatus='';active=mode;session=playSession;screen='game';pickerOpen=false;quickSearch='';ensureRound();render();sound('nav');
+  stopVoice();stopAnnouncer();voiceClipStatus='';active=mode;session=playSession;screen='game';pickerOpen=false;quickSearch='';ensureRound();render();sound('nav');voiceCue('ready');
 }
 function submitGuess(name){
   const round=getRound();if(!round||round.finished)return;
@@ -527,8 +525,8 @@ function submitGuess(name){
   const wasWon=round.won;setRound(next);
   if(next.won&&!wasWon){
     store.history.wins=(store.history.wins||0)+1;
-    store.history.bestScore=Math.max(store.history.bestScore||0,gameScore(next));sync();sound('win');
-  } else sound(next.signals.at(-1)?.kind==='correct'?'correct':'wrong');
+    store.history.bestScore=Math.max(store.history.bestScore||0,gameScore(next));sync();sound('win');voiceCue('mission_completed');
+  } else {sound(next.signals.at(-1)?.kind==='correct'?'correct':'wrong');if(next.finished)voiceCue('mission_failed');}
   pickerOpen=false;quickSearch='';render({scroll:false});
 }
 function updateSearchResults(){
@@ -547,7 +545,7 @@ function renderPicker(){
     <div class="picker-header"><div><span class="kicker">28 LEGENDS / ONE TARGET</span><h2>BROWSE LEGENDS</h2><p>Search, filter and pick. Incorrect guesses are hidden automatically.</p></div><button class="btn flat small" data-action="close-picker" aria-label="Close Legend picker">✕ CLOSE</button></div>
     <div class="picker-search"><input id="picker-search" type="search" autocomplete="off" placeholder="Search a Legend or class…" value="${esc(pickerSearch)}" aria-label="Search Legend roster"/><select id="picker-sort" aria-label="Sort Legends"><option value="az" ${pickerSort==='az'?'selected':''}>A → Z</option><option value="za" ${pickerSort==='za'?'selected':''}>Z → A</option></select></div>
     <div class="class-filters" role="group" aria-label="Filter Legends by class">${CLASS_NAMES.map(cls=>`<button class="filter-btn ${pickerClass===cls?'active':''}" data-action="filter" data-class="${cls}">${cls.toUpperCase()}</button>`).join('')}</div>
-    <div class="picker-count" id="picker-count"></div><div class="picker-grid" id="picker-grid"></div></div>`;
+    <div class="picker-count" id="picker-count"></div><div class="picker-visual-note">CHARACTER PORTRAITS · ORIGINAL GAME SOURCES WHEN AVAILABLE · NO GENERIC REPLACEMENTS</div><div class="picker-grid" id="picker-grid"></div></div>`;
   overlay.addEventListener('click',event=>{if(event.target===overlay){pickerOpen=false;overlay.remove();}});
   app.appendChild(overlay);renderPickerResults();document.getElementById('picker-search')?.focus({preventScroll:true});
 }
@@ -593,7 +591,7 @@ app.addEventListener('click',event=>{
   else if(action==='close-wheel')closeWheel();
   else if(action==='spin')spinWheel();
   else if(action==='share-wheel')void copyWheelPick();
-  else if(action==='map-guess'){const round=getRound();const entry=resolveLocation(round?.answer);if(!round||!entry)return;const updated=mapGuess(round,button.dataset.name,entry);if(updated===round)return;setRound(updated);if(updated.won){store.history.wins++;sync();sound('win');}else sound(updated.finished?'lose':'pick');render({scroll:false});}
+  else if(action==='map-guess'){const round=getRound();const entry=resolveLocation(round?.answer);if(!round||!entry)return;const updated=mapGuess(round,button.dataset.name,entry);if(updated===round)return;setRound(updated);if(updated.won){store.history.wins++;sync();sound('win');voiceCue('mission_completed');}else{sound(updated.finished?'lose':'pick');if(updated.finished)voiceCue('mission_failed');}render({scroll:false});}
   else if(action==='play-voice') {const target=legendByName(legends,getRound()?.answer);if(target){void playVoice(target.slug).then(played=>{voiceClipStatus=played?'Playing a provided recording.':'No voice recording installed. The written clue above is fully playable.';const state=document.querySelector('.voice-message');if(state)state.textContent=voiceClipStatus;});}}
   else if(action==='home'){stopVoice();screen='home';pickerOpen=false;render();sound('nav');}
   else if(action==='records'){stopVoice();screen='records';pickerOpen=false;render();sound('nav');}
@@ -604,7 +602,8 @@ app.addEventListener('click',event=>{
   }
   else if(action==='session'){session=button.dataset.session;render({scroll:false});sound('nav');}
   else if(action==='audio'){store.settings.audio=!store.settings.audio;sync();sound('pick');render({scroll:false});}
-  else if(action==='sound-test'){if(!store.settings.audio){store.settings.audio=true;sync();}sound('reveal');render({scroll:false});}
+  else if(action==='announcer'){if(button.dataset.pack==='missing'){showToast('Optional human CC0 announcer: see START_HERE.md for source and setup.');return;}store.settings.announcer=!store.settings.announcer;sync();render({scroll:false});if(store.settings.announcer)voiceCue('ready');}
+  else if(action==='sound-test'){if(!store.settings.audio){store.settings.audio=true;sync();}sound('reveal');voiceCue('ready');render({scroll:false});}
   else if(action==='motion'){store.settings.motion=!store.settings.motion;sync();render({scroll:false});}
   else if(action==='picker'){pickerOpen=true;pickerSearch='';pickerClass='All';pickerSort='az';renderPicker();sound('pick');}
   else if(action==='close-picker'){pickerOpen=false;document.getElementById('picker-backdrop')?.remove();}
@@ -681,7 +680,7 @@ setInterval(()=>{
   const round=getRound();if(!round)return;
   if(active==='map')return;
   const expired=expireRound(round,Date.now());
-  if(expired!==round){setRound(expired);sound('lose');render({scroll:false});return;}
+  if(expired!==round){setRound(expired);sound('lose');voiceCue('time_over');render({scroll:false});return;}
   const timer=document.getElementById('round-timer');if(timer){const time=remainingTime(round);timer.querySelector('span').textContent=`${time}s`;timer.classList.toggle('urgent',time<=25&&!round.finished);}
 },500);
 render();

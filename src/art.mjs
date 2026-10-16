@@ -88,7 +88,6 @@ export const artCatalog = {
     "https://apexlegends.fandom.com/wiki/Special:FilePath/Portrait%20Mad%20Maggie%20square.png"
   ],
   "mirage": [
-    "./assets/decor/mirage-spotlight-crop.webp",
     "https://raddythebrand.github.io/apex-legends/img/legends/apex_medium_0010_Mirage.png",
     "https://apexlegends.wiki.gg/wiki/Special:Redirect/file/Portrait%20Mirage%20square.png",
     "https://apexlegends.fandom.com/wiki/Special:FilePath/Portrait%20Mirage%20square.png"

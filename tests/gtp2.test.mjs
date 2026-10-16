@@ -37,8 +37,8 @@ test('game rules preserved',()=>{
  let round=newRound('Mirage','signal');round=tryGuess(round,'Octane',legends,1000);assert.equal(round.guesses.length,1);
 });
 test('GTP2 does not reuse old local save key',()=>{assert.ok(STORE_KEY.includes('predator-2'));assert.ok(!STORE_KEY.includes('candycore'));assert.equal(freshStore().version,2)});
-test('one menu-free background, one eye canvas and no artificial duplicate character',()=>{
- assert.equal(js.split('id="mirage-gaze"').length-1,1);assert.ok(js.includes('gtp2-backdrop'));
+test('one menu-free background and zero artificial eye canvases',()=>{
+ assert.equal(js.split('id="mirage-gaze"').length-1,0);assert.ok(js.includes('gtp2-backdrop'));
  assert.ok(existsSync(resolve(root,'assets/decor/haunted-hero.webp')));
  assert.ok(!js.includes('mirage-halloween-eyes-base.png'));
  assert.ok(css.includes('.gtp2-hero{width:100%'));
@@ -48,7 +48,7 @@ test('eight legitimate ability icons only',()=>{
  for(const slug of localAbilitySlugs){assert.ok(abilityCandidates(slug).length);assert.ok(existsSync(resolve(root,`assets/ability-icons/${slug}.png`)))}
 });
 test('voice and media studio present, no fake installed voices',()=>{
- assert.ok(js.includes('TEXT ONLY'));assert.ok(js.includes('MEDIA_STUDIO.html'));
+ assert.ok(js.includes('NO VOICE IMPERSONATION'));assert.ok(js.includes('MEDIA_STUDIO.html'));
  assert.ok(!js.includes('HUMAN VOICE FILE NOT INSTALLED'));
  assert.ok(existsSync(resolve(root,'MEDIA_STUDIO.html')));
 });

@@ -13,8 +13,10 @@ assert len([r for r in locations if r['kind']=='Interior'])>=10
 img=Image.open(root/'assets/decor/haunted-hero.webp')
 assert img.size[0]>=1280 and img.size[1]>=720
 js=(root/'src/app.mjs').read_text();css=(root/'styles.css').read_text()
-assert js.count('id="mirage-gaze"')==1
+assert js.count('id="mirage-gaze"')==0
 assert 'gtp2-backdrop' in js and '.gtp2-backdrop' in css
+assert (root/'dark-pink-v23.css').exists()
+assert 'dark-pink-v23.css' in (root/'index.html').read_text()
 assert not (root/'assets/decor/haunted-showcase-full.png').exists()
 assert 'HUMAN VOICE FILE NOT INSTALLED' not in js
 assert './MEDIA_STUDIO.html' in js
@@ -28,6 +30,8 @@ assert len(list((root/'assets/sfx').glob('*.wav')))==14
 assert (root/'src/engine.mjs').read_text().count('%36')>=1
 for f in (root/'assets/ability-icons').glob('*.png'):
     assert f.read_bytes()[:8]==b'\x89PNG\r\n\x1a\n', f
+assert all((root/'assets/map-recon'/f"{r['id']}.svg").exists() for r in locations)
 maps=sum(any((root/'assets/maps'/f"{r['id']}.{ext}").exists() for ext in ['webp','jpg','png','jpeg']) for r in locations)
-print(f'GTP2 QA PASS: 36 POI entries / 6 maps / 0 misleading concept images / 0 generic avatar stand-ins / {maps} bundled actual screenshots / 8 local Ability icons / 14 original WAV SFX / one borderless hero')
-if not maps: print('NOTE: No verified location screenshots bundled. Import authorized captures via Media Studio.')
+print(f'GTP2 V2.3 QA PASS: 36 unique POI-specific local vector recons / {maps} real screenshots / 6 maps / 8 local Ability icons / 14 soft WAV SFX / no eye canvas / dark pink borderless hero')
+if not maps: print('NOTE: Recon SVGs are stylized architectural clues, not official Apex screenshots.')
+if not list((root/'assets/announcer').glob('*.ogg')): print('NOTE: Human CC0 announcer is optional; generated locally or by GitHub Actions download.')

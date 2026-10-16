@@ -1,32 +1,13 @@
-> Emergency V2.2.1 rollback: see [ROLLBACK_README.md](ROLLBACK_README.md) for exact changes and remaining limitations.
+# Guess The Predator 2 — Dark Pink Reforged
 
-# Guess The Predator 2 — Pinkshift Reloaded 2.1
+Unofficial fan-made Apex-themed trivia prototype, not endorsed by or affiliated with EA or its licensors.
 
-Independent prototype of an Apex-inspired interactive fan trivia website, written as static HTML, CSS and JS modules. No npm/build dependencies. **Not endorsed by or affiliated with EA or its licensors.**
+Static HTML/CSS/ES Modules. No React, no npm, no server-side code. GitHub Pages through `.github/workflows/pages.yml`.
 
-**Review `RIGHTS_AND_GITHUB_AUDIT.md` before any public GitHub deployment.** EA's public content policy does not permit fan games/spin-offs, and some earlier visual assets/hotlinks are not cleared for redistribution. Working code does not establish permission.
+Modes: Classic, Pixel, Quote (text-only), Ability, Emoji, Map. Includes Daily, Unlimited, 180-second Rush, 6/5 attempt modes, hints, streak, Legend of the Day, Wheel and Forbidden Tip.
 
-### Included features
+Visual rebuild: dark pink Mirage centerpiece, full-screen hero, custom six mode backdrops, local map visual clues, prominent Browse Legends cards, no synthetic eye overlays.
 
-- Borderless full-screen one-image homepage; vivid magenta/cyan Pinkshift design.
-- Six challenge modes: Classic, Pixel, Quote, Ability, Emoji, Map. Daily and Unlimited; 6 guesses One Signal, 5 Full Scan, optional Rush 180 seconds.
-- 36 configured POIs on 6 maps, including interiors; multiple independently imported captures per POI.
-- Wheel, Legend of the Day, Forbidden Tip/Chest, streaks and local browser storage.
-- **14 original local WAV UI sounds**: 6 hover sounds and 8 functional navigation/outcome effects. No third-party audio samples or character impersonations included.
-- Media Studio for permitted map screenshots, Ability icons and human-recorded voice clips; Media Diagnostic for live asset health checks.
+**Honest media status:** 36 custom local map clue SVGs, 14 original UI WAV sounds, 6 local game backgrounds, 8 legitimate game Ability icons. No real local 3D portraits/POI screenshots or human voice recordings in the ZIP. Optional CC0 HUMAN announcer downloaded during Pages deployment when available or installed manually. Quote mode does NOT claim to feature real Apex character voice lines.
 
-### Current media availability
-
-| Category | Available |
-|---|---|
-| Map locations configured | 36 |
-| Actual permitted location screenshots bundled | **0** |
-| Genuine Ability crops in legacy project | 8 |
-| Actual licensed character voice recordings | **0** |
-| Original authored WAV effects | **14** |
-| Remote Legend portraits | Links only, rights/reliability not verified |
-
-Local preview: `python -m http.server 8000` then `http://localhost:8000/`.
-Node smoke test: `node --test tests/*.test.mjs`; package check: `python3 scripts/validate_release.py`.
-
-More details: `START_HERE.md`, `RELEASE_NOTES.md`, `RIGHTS_AND_GITHUB_AUDIT.md`.
+Read `START_HERE.md` for installation, `RELEASE_NOTES.md` for changes, `RIGHTS_AND_GITHUB_AUDIT.md` for copyright limitations.

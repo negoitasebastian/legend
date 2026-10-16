@@ -319,10 +319,10 @@ export function mapShots(entry,angle=0){
    .map(filename=>`./assets/maps/${filename}`);
  if(manifest.length){
    const start=((Math.trunc(Number(angle)||0)%manifest.length)+manifest.length)%manifest.length;
-   return [...manifest.slice(start),...manifest.slice(0,start)];
+   return [...manifest.slice(start),...manifest.slice(0,start),`./assets/map-recon/${entry.id}.svg`];
  }
  // Backward-compatible single-image installation without a manifest.
- return ['webp','png','jpg','jpeg'].map(ext=>mapLocalPath(entry,ext));
+ return [...['webp','png','jpg','jpeg'].map(ext=>mapLocalPath(entry,ext)),`./assets/map-recon/${entry.id}.svg`];
 }
 export function mapRound(entry){return {answer:entry.id,stage:1,mapGuesses:[],poiGuesses:[],won:false,finished:false,loss:null,startedAt:null,finishedAt:null,mediaAngle:Math.floor(Math.random()*100000)};}
 export function mapGuess(round,value,entry,now=Date.now()){

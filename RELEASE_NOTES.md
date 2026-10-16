@@ -1,19 +1,21 @@
-## V2.2.2 Dark Bloom Cleanup
+# Guess The Predator 2 — V2.3 Dark Pink Reforged
 
-- removed Mirage eye overlay from the homepage hero
-- softened heavy shadows and shifted UI back toward dark pink neon
-- enlarged Browse Legends portrait area for more complete character framing
-- refined Pixel Mode blur progression for cleaner reveal steps
-- kept Quote mode text-only and preserved the rollback-safe asset rules
+**Rebuild of the visual layer on the stable v2.2.1 logic, not a promise of content that is not installed.**
 
-# Guess The Predator 2 — V2.2.1 Emergency Restoration
+### Working changes
+- Edge-to-edge Halloween Mirage hero, with original artwork only. All artificial eye overlays removed.
+- New dark-pink and cyan theme, reduced shadows, bigger challenge cards, improved Daily/Free Play placement, new accessible focus states.
+- Each of the six game modes has a dedicated original SVG wall/background; no more empty dark pages.
+- Browse Legends has larger portrait cards, class search, sorting; restored real Legend image sources, no random generated stand-ins.
+- Pixel gets gentler, better-stepped reveal and three controlled styles.
+- Map: 36 distinct, locally bundled **architecturally keyed visual reconstructions**; they are not official Apex screenshots. Local owner-authorized photos override the reconstructions. Stage 1 = map; stage 2 = POI. A descriptive structural readout is displayed.
+- Quote stays original-written text-only, no voice impersonation or synthetic speech.
+- Human game-announcer option powered by Kenney's **CC0 human recordings**, downloadable through automated Pages build or the local installer when the source is accessible.
+- All 14 WAV UI effects replaced with softer original nonvocal synth cues; six distinct hover sounds retained.
+- Repo cleanup utility, updated GitHub Pages workflow and automated tests.
 
-**What was deliberately rolled back:**
-- Character artwork: removed all 28 generic stand-in figures; original recognisable portrait catalogue from V2.1 is used again. Those portraits are externally hosted and may still fail; they are not locally bundled.
-- Map: removed 72 generic concept pictures and disabled their misleading POI mapping. With no approved true screenshots added, the game displays a written clue. The 36-location catalogue and Media Studio still work.
-- Audio: removed the six new entry stingers; restored navigation sound from V2.1. Other pre-existing UI sounds remain.
-- UI: reverted Pinkshift 2.0's heavy game-scene/picker overrides to the earlier Pinkshift CSS, while keeping Quote text-only.
-
-**Limits:** This is a targeted rollback, NOT the promised map-media solution. It does not bundle official Apex Legend portraits. External artwork has availability and rights risks. This patch does not certify EA/GitHub policy compliance.
-
-**Deploy over existing GitHub repo:** First back up your work. Copy root-level files from this ZIP to the repo. **Delete** old folders/files `assets/legends/`, `assets/maps/*-concept-*.webp`, `src/concept_map_manifest.mjs`, and `assets/sfx/enter-*.wav` from the repo; merely copying files doesn't delete old files. Keep your `.git` folder intact. Commit, push, verify GitHub Actions, hard-refresh. If you prefer the safest full rollback, use GitHub Desktop History → Revert the V2.2 commit and Push.
+### Important limitations
+- This ZIP includes **zero actual Apex POI screenshots**; 36 accurate-to-description visual schematics are included instead.
+- This ZIP includes **zero human voice files**; the CC0 installer/download automation is included. The voices appear only after a successful install in GitHub Actions or by the repo owner.
+- The game still depends on third-party character portraits; there are **zero newly packaged/cleared full 3D Legend renders**. There are eight locally bundled real Ability icons, and Ability rounds are restricted to them to avoid broken puzzles.
+- EA's official policy has restrictions relevant to fan games, and neither this ZIP nor these modifications eliminate legal/hosting risk.

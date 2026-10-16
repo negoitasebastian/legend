@@ -1,36 +1,32 @@
-## IMPORTANT CLEAN DEPLOY
+# Guess The Predator 2 — V2.3 Dark Pink Reforged
 
-If you are replacing an older GTP2 repository, delete these stale files before copying the new build: `src/concept_map_manifest.mjs`, any `assets/maps/*-concept-*.webp`, the folder `assets/legends/`, and any `assets/sfx/enter-*.wav`. Keep `.git`.
+## Recommended: a CLEAN GitHub repository
+1. Extract the ZIP. Root must directly contain `index.html`, `src/`, `assets/`, `styles.css`, `pinkshift.css`, `dark-pink-v23.css`, `.github/`.
+2. For a new repository, copy these files into your new GitHub Desktop repository folder. Do not copy a wrapping folder. Do not delete `.git`.
+3. Commit and Push origin. In GitHub Settings → Pages choose **GitHub Actions**.
+4. Wait for green Actions; reload with Ctrl+F5.
 
-> For V2.2.1 rollback and safe repo cleanup, read `ROLLBACK_README.md` first.
+## Upgrading an old repository
+Windows copy/paste does NOT delete files that were in older versions. Before commit run:
+`python3 scripts/clean_old_release.py`
+This deletes only old `src/concept_map_manifest.mjs`, `assets/maps/*-concept-*.webp`, `assets/legends/*.webp`, `assets/sfx/enter-*.wav`, and old duplicate artwork. It will NOT touch `.git` or your real map captures. **Review the GitHub Desktop Changes tab and commit deletions.** The Pages workflow also prunes stale content from the deployment working tree, but that does not remove it from the Git repository history.
 
-# Guess The Predator 2 — Pinkshift Reloaded
+## Human voice announcer (CC0)
+The GitHub Actions deployment attempts to download Kenney's CC0 Voiceover Pack, and install suitable REAL human-spoken OGG files. If its server cannot be reached, the build stays online and the announcer is unavailable; no robotic replacement is used. The ZIP itself does NOT contain these recordings because download access was unavailable in the build environment.
 
-**PUBLICATION CAUTION:** Read `RIGHTS_AND_GITHUB_AUDIT.md` first. The site's game-specific content has not been fully cleared. EA's published content policy restricts fan games, so this package is intended for local review/development until permissions or appropriate legal review are completed.
+To bundle and commit voices reliably, visit https://kenney.nl/assets/voiceover-pack, download the original archive, then execute:
+`python3 scripts/install_cc0_announcer.py "Voiceover Pack.zip"`
+Commit the resulting `assets/announcer/*.ogg` and `assets/announcer/manifest.json`. These clips are CC0 *game announcer* phrases, not the voices of the 28 Legends. Quote remains text-only; doing otherwise would falsely associate unrelated actors with the characters.
 
-## Preview / local development
+## Game maps and character portraits
+All 36 POIs have **unique, local original schematic visual clues** in `assets/map-recon/`, and they work offline. These are NOT real screenshots. For better real visual recognition you can add authorized screenshots through `MEDIA_STUDIO.html`; local screenshots always supersede schematic clues.
 
-No npm required. From the project root, run `python -m http.server 8000`, then open `http://localhost:8000/` in your browser. Opening index.html via `file://` may block ES Modules.
+Browse Legends uses REAL character portrait URLs from prior versions; no generic AI substitutes have been inserted. Some images can fail because of third-party hosts. The ZIP contains NO 28 locally licensed full 3D renders; do not describe this part as independently guaranteed offline.
 
-## If authorized to publish on GitHub Pages
+## Run tests
+`node --test tests/*.test.mjs`
+`python3 scripts/validate_release.py`
+Requires Python Pillow (Actions installs this). Chromium browser checks live in `tests/browser_qa.py` and `tests/v23_browser_media_qa.py`.
 
-1. Create a brand-new repository (e.g. `guess-the-predator-2`).
-2. Extract the ZIP. Copy **all contents of the ZIP** directly to repository root (`index.html`, `pinkshift.css`, `styles.css`, `src`, `assets`, `.github`). Do not wrap them inside an extra folder.
-3. Commit and Push via GitHub Desktop to the main branch.
-4. GitHub → Settings → Pages → Build and deployment → Source: **GitHub Actions**. Wait for workflow to turn green.
-5. Clear cache or press Ctrl+F5 if the old theme still appears.
-
-## Media Studio workflow
-
-- Open `MEDIA_STUDIO.html` on the site. Each map/POI accepts **up to eight** distinct local images. Imports are not uploaded automatically.
-- Use only media with public distribution permission. Confirm rights checkbox; export media pack ZIP; extract it over repo root and push.
-- Install genuine permitted character recordings through Studio if available. They will work with the existing playback control; synthetic impersonations are not included.
-- `MEDIA_DIAGNOSTIC.html` shows actual files found by the browser.
-
-## Status
-
-- 36 configured Map sectors, including interiors; **0 actual licensed Map screenshots** supplied.
-- 8 local Ability crops; 20 need authorized artwork.
-- **14 original UI audio clips installed and playable** after user interaction.
-- 0 character voices bundled (human recordings require appropriate permission).
-- Remote portrait hotlinks currently remain an unresolved rights/reliability concern.
+## Legal
+Read `RIGHTS_AND_GITHUB_AUDIT.md` before publicly hosting. This game is unofficial; EA's current content policy restricts fan games and use of third-party voice content. CC0 game-announcer audio does not grant permission for EA imagery, characters, or to publish a fan game.
